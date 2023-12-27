@@ -1,0 +1,189 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ZombieAvatar
+  m_Mask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+  m_Elements:
+  - m_Path: 
+    m_Weight: 1
+  - m_Path: zombie
+    m_Weight: 1
+  - m_Path: Zombie_rig
+    m_Weight: 1
+  - m_Path: Zombie_rig/pelvis left
+    m_Weight: 1
+  - m_Path: Zombie_rig/pelvis left/up leg.002
+    m_Weight: 1
+  - m_Path: Zombie_rig/pelvis left/up leg.002/under lag
+    m_Weight: 1
+  - m_Path: Zombie_rig/pelvis left/up leg.002/under lag/food.001
+    m_Weight: 1
+  - m_Path: Zombie_rig/pelvis left/up leg.002/under lag/food.001/Bone.050
+    m_Weight: 1
+  - m_Path: Zombie_rig/pelvis left/up leg.002/under lag/food.001/Bone.050/Bone.050_end
+    m_Weight: 1
+  - m_Path: Zombie_rig/pelvis right
+    m_Weight: 1
+  - m_Path: Zombie_rig/pelvis right/up leg
+    m_Weight: 1
+  - m_Path: Zombie_rig/pelvis right/up leg/unter leg
+    m_Weight: 1
+  - m_Path: Zombie_rig/pelvis right/up leg/unter leg/food
+    m_Weight: 1
+  - m_Path: Zombie_rig/pelvis right/up leg/unter leg/food/Bone.049
+    m_Weight: 1
+  - m_Path: Zombie_rig/pelvis right/up leg/unter leg/food/Bone.049/Bone.049_end
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/neck
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/neck/head
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/neck/head/head_end
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/neck/mouth
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/neck/mouth/mouth_end
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right/under
+      arm right
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right/under
+      arm right/finger right hand
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right/under
+      arm right/finger right hand/finger right hand.001
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right/under
+      arm right/finger right hand/finger right hand.001/Bone.012
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right/under
+      arm right/finger right hand/finger right hand.001/Bone.012/Bone.012_end
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right/under
+      arm right/finger right hand.002
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right/under
+      arm right/finger right hand.002/finger right hand.003
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right/under
+      arm right/finger right hand.002/finger right hand.003/Bone.016
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right/under
+      arm right/finger right hand.002/finger right hand.003/Bone.016/Bone.016_end
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right/under
+      arm right/finger right hand.004
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right/under
+      arm right/finger right hand.004/finger right hand.005
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right/under
+      arm right/finger right hand.004/finger right hand.005/Bone.019
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right/under
+      arm right/finger right hand.004/finger right hand.005/Bone.019/Bone.019_end
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right/under
+      arm right/finger right hand.006
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right/under
+      arm right/finger right hand.006/finger right hand.007
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right/under
+      arm right/finger right hand.006/finger right hand.007/Bone.022
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right/under
+      arm right/finger right hand.006/finger right hand.007/Bone.022/Bone.022_end
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right/under
+      arm right/finger right hand.008
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right/under
+      arm right/finger right hand.008/finger right hand.009
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right/under
+      arm right/finger right hand.008/finger right hand.009/Bone.025
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/upper chest right/up arm right/under
+      arm right/finger right hand.008/finger right hand.009/Bone.025/Bone.025_end
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left/under
+      arm left
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left/under
+      arm left/hand left
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left/under
+      arm left/hand left/Bone.011
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left/under
+      arm left/hand left/Bone.011/Bone.013
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left/under
+      arm left/hand left/Bone.011/Bone.013/Bone.013_end
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left/under
+      arm left/hand left.001
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left/under
+      arm left/hand left.001/Bone.027
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left/under
+      arm left/hand left.001/Bone.027/Bone.028
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left/under
+      arm left/hand left.001/Bone.027/Bone.028/Bone.028_end
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left/under
+      arm left/hand left.002
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left/under
+      arm left/hand left.002/Bone.030
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left/under
+      arm left/hand left.002/Bone.030/Bone.031
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left/under
+      arm left/hand left.002/Bone.030/Bone.031/Bone.031_end
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left/under
+      arm left/hand left.003
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left/under
+      arm left/hand left.003/Bone.033
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left/under
+      arm left/hand left.003/Bone.033/Bone.034
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left/under
+      arm left/hand left.003/Bone.033/Bone.034/Bone.034_end
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left/under
+      arm left/hand left.004
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left/under
+      arm left/hand left.004/Bone.036
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left/under
+      arm left/hand left.004/Bone.036/Bone.037
+    m_Weight: 1
+  - m_Path: Zombie_rig/Under_chest/Upper chest/Upper_chest_left/up arm left/under
+      arm left/hand left.004/Bone.036/Bone.037/Bone.037_end
+    m_Weight: 1
