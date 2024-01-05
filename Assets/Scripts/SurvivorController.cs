@@ -36,6 +36,7 @@ public class SurvivorController : MonoBehaviour
 
     private NavMeshAgent agent;
     private Animator humanAnim;
+    private float reloader = 0;
     private float nextFire = 0;
     private bool isAlerted;
     private bool isWalking = false;
