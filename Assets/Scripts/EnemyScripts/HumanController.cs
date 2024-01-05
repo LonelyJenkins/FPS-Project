@@ -56,7 +56,7 @@ public class HumanController : MonoBehaviour
         currentAmmo = maxAmmo;
 
         AnimationTypeSet();
-        //this specifies whether uzi type animations will play, or rifle type
+        //this specifies whether uzi specific animations will play, or rifle specific
     }
 
     // Update is called once per frame
@@ -325,7 +325,7 @@ public class HumanController : MonoBehaviour
         }
         else
         {
-            Debug.Log("Better Luck Next Kill BITCH");
+            Debug.Log("Better Luck Next Kill");
         }
     }
 
