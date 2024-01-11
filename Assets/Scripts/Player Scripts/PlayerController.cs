@@ -21,10 +21,14 @@ public class PlayerController : MonoBehaviour
     public bool isDead = false;
     [Space()]
 
+    [Header("GameMode Settings")]
+    public bool isSurvival = false;
+    public bool isTDM = false;
+
     private float groundDistance = 0.4f;
     private bool isGrounded;
     private bool isPointingAtDoor;
-    private GameManager gameManager;
+    private TDMManager tdmManager;
     private Camera mainCam;
     private Vector3 velocity;
     private GameObject AK;
@@ -37,7 +41,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         mainCam = Camera.main;
-        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        tdmManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<TDMManager>();
         AK = GameObject.Find("Player/PlayerCharacter/Main Camera/WeaponSlot/AkRecoil/AK-47");
         Uzi = GameObject.Find("Player/PlayerCharacter/Main Camera/WeaponSlot/UziRecoil/Uzi");
         Colt = GameObject.Find("Player/PlayerCharacter/Main Camera/WeaponSlot/ColtM4Recoil/ColtM4");
@@ -98,6 +102,13 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+        else if (isDead && isTDM)
+        {
+            if (Input.GetButtonDown("Jump"))
+            {
+                Respawn();
+            }
+        }
 
     }
 
@@ -117,6 +128,18 @@ public class PlayerController : MonoBehaviour
     void Death()
     {
         isDead = true;
+        if (isTDM)
+        {
+            tdmManager.enemyScore += tdmManager.killValue;
+        }
+    }
+
+    void Respawn()
+    {
+        isDead = false;
+        currentHealth = maxHealth;
+        //assign new spawnpoint through gamemanager
+        //reset all ammunition to starting values
     }
 
 

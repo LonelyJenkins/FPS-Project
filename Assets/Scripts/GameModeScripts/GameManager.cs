@@ -41,6 +41,9 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         playerController = player.GetComponent<PlayerController>();
+        playerController.isTDM = false;
+        playerController.isSurvival = true;
+        //Assigning unique gamemode settings to player controller
         friendlyCount += startingFriendlyCount;
         //Begins rounds with predetermined amount of friendly NPCs
         waveNumber++;
@@ -153,6 +156,7 @@ public class GameManager : MonoBehaviour
                         friendlyCount++; //updates the friendly NPC count in the HUD
                         int friendlyIndex = Random.Range(0, friendlies.Length); //chooses random friendly prefab
                         Instantiate(friendlies[friendlyIndex], friendlySpawn.transform.position, Quaternion.identity);
+                        friendlies[friendlyIndex].GetComponent<SurvivorController>().isSurvival = true;
                     }
 
                 }

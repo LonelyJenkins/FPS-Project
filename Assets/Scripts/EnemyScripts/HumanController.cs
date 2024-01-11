@@ -19,6 +19,8 @@ public class HumanController : MonoBehaviour
     public GameObject visionPoint;
     public GameObject rig;
     public GameObject dropItem;
+    public bool isAlerted;
+    public bool isTDM;
     [Space()]
 
     [Header("Weapon Settings")]
@@ -37,13 +39,13 @@ public class HumanController : MonoBehaviour
     private NavMeshAgent agent;
     private Animator humanAnim;
     private float nextFire = 0;
-    private bool isAlerted;
     private bool isWalking = false;
     [SerializeField] private bool enemyInSight = false;
     private bool isReloading = false;
     public bool isDead = false;
     private string weaponType;
     private PlayerController player;
+    private TDMManager tdmManager;
 
 
     // Start is called before the first frame update
@@ -55,8 +57,12 @@ public class HumanController : MonoBehaviour
         DoRagdoll(isDead);
         currentAmmo = maxAmmo;
 
-        AnimationTypeSet();
-        //this specifies whether uzi specific animations will play, or rifle specific
+        AnimationTypeSet(); //this specifies whether uzi specific animations will play, or rifle specific
+
+        if (isTDM) //assigning unique settings for TDM game mode 
+        {
+            tdmManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<TDMManager>();
+        }
     }
 
     // Update is called once per frame
@@ -257,6 +263,12 @@ public class HumanController : MonoBehaviour
         agent.enabled = false;
         Destroy(gameObject, despawnTime);
         DoRagdoll(isDead);
+
+        if (isTDM)
+        {
+            tdmManager.friendlyScore += tdmManager.killValue;
+            tdmManager.SpawnNext(true);
+        }
     }
 
     void DoRagdoll(bool deathState)
