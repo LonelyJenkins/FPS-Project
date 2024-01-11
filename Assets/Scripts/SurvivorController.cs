@@ -19,6 +19,8 @@ public class SurvivorController : MonoBehaviour
     public GameObject visionPoint;
     public GameObject rig;
     public GameObject dropItem;
+    public bool isTDM = false;
+    public bool isSurvival = false;
     [Space()]
 
     [Header("Weapon Settings")]
@@ -36,7 +38,6 @@ public class SurvivorController : MonoBehaviour
 
     private NavMeshAgent agent;
     private Animator humanAnim;
-    private float reloader = 0;
     private float nextFire = 0;
     private bool isAlerted;
     private bool isWalking = false;
@@ -46,6 +47,7 @@ public class SurvivorController : MonoBehaviour
     private string weaponType;
     private PlayerController player;
     private GameManager gameManager;
+    private TDMManager tdmManager;
 
 
     // Start is called before the first frame update
@@ -54,12 +56,20 @@ public class SurvivorController : MonoBehaviour
         agent = gameObject.GetComponent<NavMeshAgent>();
         humanAnim = gameObject.GetComponentInChildren<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
         DoRagdoll(isDead);
         currentAmmo = maxAmmo;
 
         AnimationTypeSet();
         //this specifies whether uzi type animations will play, or rifle type
+
+        if (isSurvival)
+        {
+            gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+        }
+        else if (isTDM)
+        {
+            tdmManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<TDMManager>();
+        }
     }
 
     // Update is called once per frame
@@ -243,7 +253,6 @@ public class SurvivorController : MonoBehaviour
     void Death()
     {
         isDead = true;
-        gameManager.friendlyCount--;
         DropItem();
         Collider collider = gameObject.GetComponent<Collider>();
         collider.enabled = false;
@@ -251,6 +260,16 @@ public class SurvivorController : MonoBehaviour
         agent.enabled = false;
         Destroy(gameObject, despawnTime);
         DoRagdoll(isDead);
+
+        if (isSurvival)
+        {
+            gameManager.friendlyCount--;
+        }
+        else if (isTDM)
+        {
+            tdmManager.enemyScore += tdmManager.killValue;
+            tdmManager.SpawnNext(false);
+        }
     }
 
     void DoRagdoll(bool deathState)
