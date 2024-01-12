@@ -36,7 +36,7 @@ public class MouseLook : MonoBehaviour
 
         else
         {
-                if (!hasLanded)
+                if (!hasLanded && !playerController.isTDM)
                 transform.Translate(Vector3.down * fallSpeed * Time.deltaTime);
         }
 

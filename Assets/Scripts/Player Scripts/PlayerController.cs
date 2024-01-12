@@ -24,6 +24,7 @@ public class PlayerController : MonoBehaviour
     [Header("GameMode Settings")]
     public bool isSurvival = false;
     public bool isTDM = false;
+    public Transform[] spawnPoints;
 
     private float groundDistance = 0.4f;
     private bool isGrounded;
@@ -80,10 +81,10 @@ public class PlayerController : MonoBehaviour
                 velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
             }
 
-            velocity.y += gravity * Time.deltaTime;
+            velocity.y += gravity * Time.deltaTime; //player gravity is coded. NOT physics based
             controller.Move(velocity * Time.deltaTime);
 
-            //Door Interaction
+            //Door Interaction for survival gamemode
             if (Physics.Raycast(mainCam.transform.position, mainCam.transform.forward, out RaycastHit hit, doorCheckDistance, doorLayer))
             {
                 DoorController door = hit.transform.GetComponentInChildren<DoorController>();
@@ -102,7 +103,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        else if (isDead && isTDM)
+        else if (isDead && isTDM) //if TDM, you are able to respawn
         {
             if (Input.GetButtonDown("Jump"))
             {
@@ -128,18 +129,31 @@ public class PlayerController : MonoBehaviour
     void Death()
     {
         isDead = true;
+
         if (isTDM)
         {
-            tdmManager.enemyScore += tdmManager.killValue;
+            tdmManager.enemyScore += tdmManager.killValue; //adding score to enemy team if TDM
         }
     }
 
     void Respawn()
     {
         isDead = false;
+        tdmManager.deathText.enabled = false;
         currentHealth = maxHealth;
-        //assign new spawnpoint through gamemanager
-        //reset all ammunition to starting values
+
+        int randSpawn = Random.Range(0, spawnPoints.Length); //Player spawns in randomly chosen friendly spawnpoint
+        transform.position = spawnPoints[randSpawn].position;
+
+        GameObject[] allGuns = { AK, Uzi, Colt}; //referencing all guns in player inventory and resetting ammo
+        foreach (GameObject gun in allGuns)
+        {
+            Gun gunSettings = gun.GetComponent<Gun>();
+            gunSettings.ammoPouch = 90;
+        }
+
+        SMAW.GetComponent<RocketLauncher>().ammoPouch = 5; //resetting grenade and rocket inventory
+        Grenade.GetComponent<GrenadeThrower>().ammoPouch = 5;
     }
 
 
