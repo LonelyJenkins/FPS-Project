@@ -55,6 +55,7 @@ public class TDMManager : MonoBehaviour
             int friendlyIndex = Random.Range(0, friendlies.Length);
             int spawnIndex = Random.Range(0, friendlySpawnPoints.Length);
             Instantiate(friendlies[friendlyIndex], friendlySpawnPoints[spawnIndex].transform.position, Quaternion.identity);
+            friendlies[friendlyIndex].GetComponent<SurvivorController>().isTDM = true;
         }
     }
 
@@ -102,28 +103,30 @@ public class TDMManager : MonoBehaviour
 
     }
 
-    public void SpawnNext(bool isEnemy)
+    public void SpawnNext(int isEnemy)
     {
-        if (isEnemy)
+        if (isEnemy == 1)
         {
             int enemyIndex = Random.Range(0, enemies.Length);
             int spawnIndex = Random.Range(0, enemySpawnPoints.Length);
             Instantiate(enemies[enemyIndex], enemySpawnPoints[spawnIndex].transform.position, Quaternion.identity);
             enemies[enemyIndex].GetComponent<HumanController>().isAlerted = true;
             enemies[enemyIndex].GetComponent<HumanController>().isTDM = true;
+            Debug.Log("BADDIE HAS SPAWNED");
         }
 
-        else
+        else if (isEnemy ==2)
         {
             int friendlyIndex = Random.Range(0, friendlies.Length);
             int spawnIndex = Random.Range(0, friendlySpawnPoints.Length);
             Instantiate(friendlies[friendlyIndex], friendlySpawnPoints[spawnIndex].transform.position, Quaternion.identity);
+            Debug.Log("GOOD BOI HAS SPAWNED");
         }
     }
 
     void UIStatus() //This switches the UI text indicating if player's team is winning, losing, or tied, while match is active
     {
-        if (matchOver)
+        if (!matchOver)
         {
             if (enemyScore > friendlyScore)
             {

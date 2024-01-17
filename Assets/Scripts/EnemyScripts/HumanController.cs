@@ -51,6 +51,11 @@ public class HumanController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+    }
+
+    private void Awake()
+    {
         agent = gameObject.GetComponent<NavMeshAgent>();
         humanAnim = gameObject.GetComponentInChildren<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
@@ -267,7 +272,7 @@ public class HumanController : MonoBehaviour
         if (isTDM)
         {
             tdmManager.friendlyScore += tdmManager.killValue;
-            tdmManager.SpawnNext(true);
+            tdmManager.SpawnNext(1);
         }
     }
 

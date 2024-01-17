@@ -53,6 +53,11 @@ public class SurvivorController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+    }
+
+    private void Awake()
+    {
         agent = gameObject.GetComponent<NavMeshAgent>();
         humanAnim = gameObject.GetComponentInChildren<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
@@ -69,6 +74,7 @@ public class SurvivorController : MonoBehaviour
         else if (isTDM)
         {
             tdmManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<TDMManager>();
+            isAlerted = true;
         }
     }
 
@@ -268,7 +274,7 @@ public class SurvivorController : MonoBehaviour
         else if (isTDM)
         {
             tdmManager.enemyScore += tdmManager.killValue;
-            tdmManager.SpawnNext(false);
+            tdmManager.SpawnNext(2);
         }
     }
 

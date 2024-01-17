@@ -62,11 +62,6 @@ public class PlayerController : MonoBehaviour
         //Controller Logic
         isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
-        if (isGrounded && velocity.y < 0)
-        {
-            velocity.y = -2;
-        }
-
         if (!isDead)
         {
             float x = Input.GetAxis("Horizontal");
@@ -79,6 +74,11 @@ public class PlayerController : MonoBehaviour
             if (Input.GetButtonDown("Jump") && isGrounded)
             {
                 velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
+            }
+
+            if (isGrounded && velocity.y < 0)
+            {
+                velocity.y = -2;
             }
 
             velocity.y += gravity * Time.deltaTime; //player gravity is coded. NOT physics based
@@ -138,12 +138,11 @@ public class PlayerController : MonoBehaviour
 
     void Respawn()
     {
+        int randSpawn = Random.Range(0, spawnPoints.Length); //Player spawns in randomly chosen friendly spawnpoint
+        gameObject.transform.position = spawnPoints[randSpawn].transform.position;
         isDead = false;
         tdmManager.deathText.enabled = false;
         currentHealth = maxHealth;
-
-        int randSpawn = Random.Range(0, spawnPoints.Length); //Player spawns in randomly chosen friendly spawnpoint
-        transform.position = spawnPoints[randSpawn].position;
 
         GameObject[] allGuns = { AK, Uzi, Colt}; //referencing all guns in player inventory and resetting ammo
         foreach (GameObject gun in allGuns)
