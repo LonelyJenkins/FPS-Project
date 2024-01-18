@@ -56,25 +56,25 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (currentHealth >= maxHealth)
+        if (currentHealth >= maxHealth) //health value never goes beyond maximum set health
         {
             currentHealth = maxHealth;
         }
         //Controller Logic
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask); //check if player is currently touching the ground
 
         if (!isDead)
         {
             float x = Input.GetAxis("Horizontal");
             float z = Input.GetAxis("Vertical");
 
-            Vector3 move = transform.right * x + transform.forward * z;
+            Vector3 move = transform.right * x + transform.forward * z; //general movement logic
 
             controller.Move(move * speed * Time.deltaTime);
 
             if (Input.GetButtonDown("Jump") && isGrounded)
             {
-                velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
+                velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity); //jumping logic
             }
 
             if (isGrounded && velocity.y < 0)
@@ -82,7 +82,7 @@ public class PlayerController : MonoBehaviour
                 velocity.y = -2;
             }
 
-            velocity.y += gravity * Time.deltaTime; //player gravity is coded. NOT physics based
+            velocity.y += gravity * Time.deltaTime; //player gravity is coded. NOT from built-in physics
             controller.Move(velocity * Time.deltaTime);
 
             //Door Interaction for survival gamemode
@@ -139,8 +139,10 @@ public class PlayerController : MonoBehaviour
 
     void Respawn()
     {
+        gameObject.SetActive(false); //Temporarily deactivating player will interrupt any further transform updates until after player is repositioned
         int randSpawn = Random.Range(0, spawnPoints.Length); //Player spawns in randomly chosen friendly spawnpoint
         gameObject.transform.position = spawnPoints[randSpawn].transform.position;
+        gameObject.SetActive(true);
         isDead = false;
         tdmManager.deathText.enabled = false;
         currentHealth = maxHealth;

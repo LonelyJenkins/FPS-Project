@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
 
     // AKA SURVIVAL GAME MODE MANAGER
 
+    [Header("Game Mode Settings")]
     public GameObject[] friendlySpawnPoints;
     public GameObject[] ammoSpawnPoints;
     public GameObject[] enemySpawnPoints;
@@ -24,10 +25,14 @@ public class GameManager : MonoBehaviour
     public int doorsRemaining = 3;
     public int bossWaveInterval = 4;
     public int roundIntervalTime = 8;
+    [Space]
+
+    [Header("UI Settings")]
     public Text waveDisplay;
     public Text enemyCounter;
     public Text doorCounter;
     public Text friendlyCounter;
+    public Slider healthBar;
 
     private int lastBossWave;
     private int lastEnemyCount;
@@ -41,6 +46,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         playerController = player.GetComponent<PlayerController>();
+        healthBar.maxValue = playerController.maxHealth;//Assigning value to the health bar
         playerController.isTDM = false;
         playerController.isSurvival = true;
         //Assigning unique gamemode settings to player controller
@@ -57,6 +63,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         //This will keep track of all data for HUD
+        healthBar.value = playerController.currentHealth;
         enemyCounter.text = ("Enemies Left: " + enemyCount);
         doorCounter.text = ("Cabins Remaining: " + doorsRemaining);
         friendlyCounter.text = ("Survivors Alive: " + friendlyCount);

@@ -29,6 +29,7 @@ public class TDMManager : MonoBehaviour
     public Text losingStatus;
     public Text winningStatus;
     public Text tiedStatus;
+    public Slider healthBar;
 
 
     private PlayerController playerController;
@@ -39,6 +40,7 @@ public class TDMManager : MonoBehaviour
         playerController = player.GetComponentInChildren<PlayerController>();
         playerController.isSurvival = false;
         playerController.isTDM = true; //Assigning unique gamemode settings to player controller
+        healthBar.maxValue = playerController.maxHealth;// Assigning value to the healthbar
 
         //spawning all NPCs at start of the game
         for (int i = 0; i < enemyCount; i++)
@@ -62,6 +64,7 @@ public class TDMManager : MonoBehaviour
     void Update()
     {
         //This will keep track of all data for HUD
+        healthBar.value = playerController.currentHealth;
         friendlyScoreText.text = "" + friendlyScore;
         enemyScoreText.text = "" + enemyScore;
         UIStatus(); //UI status switcher

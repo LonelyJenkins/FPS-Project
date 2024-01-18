@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Gun : MonoBehaviour
 {
@@ -38,6 +39,7 @@ public class Gun : MonoBehaviour
     private PlayerHud playerHud;
     private WeaponSwitching weaponSwitching;
     private PlayerController playerController;
+    private HitMarker hitMarker;
 
     private void Start()
     {
@@ -45,6 +47,7 @@ public class Gun : MonoBehaviour
         playerHud = GameObject.FindGameObjectWithTag("hud").GetComponent<PlayerHud>();
         gunAnim = gameObject.GetComponent<Animator>();
         playerController = gameObject.GetComponentInParent<PlayerController>();
+        hitMarker = GameObject.FindGameObjectWithTag("HitMarker").GetComponent<HitMarker>();
     }
 
     private void OnEnable()
@@ -136,6 +139,7 @@ public class Gun : MonoBehaviour
                 zombie.TakeDamage(damage);
                 GameObject bodyHit = Instantiate(bodyHitFX, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(bodyHit, 1);
+                hitMarker.IndicateHit();
             }
 
             HumanController human = hit.transform.GetComponent<HumanController>();
@@ -144,6 +148,7 @@ public class Gun : MonoBehaviour
                 human.TakeDamage(damage);
                 GameObject bodyHit = Instantiate(bodyHitFX, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(bodyHit, 1);
+                hitMarker.IndicateHit();
             }
 
             BossController boss = hit.transform.GetComponent<BossController>();
@@ -152,6 +157,7 @@ public class Gun : MonoBehaviour
                 boss.TakeDamage(damage);
                 GameObject bodyHit = Instantiate(bodyHitFX, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(bodyHit, 1);
+                hitMarker.IndicateHit();
             }
 
             if (hit.rigidbody != null)
