@@ -11,6 +11,7 @@ public class Gun : MonoBehaviour
     public float fireRate = 15;
     public int maxAmmo = 10;
     public int ammoPouch = 90;
+    public int currentAmmo;
     public float reloadTime = 1;
     public bool isScoped = false;
     public float recoilRotation = 0.1f;
@@ -30,7 +31,6 @@ public class Gun : MonoBehaviour
 
 
     private float nextFire = 0;
-    private int currentAmmo;
     public bool isReloading = false;
     public bool isShooting = false;
     public GameObject muzzleLight;

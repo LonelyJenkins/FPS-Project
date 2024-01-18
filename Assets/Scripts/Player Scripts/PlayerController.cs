@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     public int maxHealth = 100;
     public int currentHealth;
     public bool isDead = false;
+    public GameObject gunCam;
     [Space()]
 
     [Header("GameMode Settings")]
@@ -143,11 +144,13 @@ public class PlayerController : MonoBehaviour
         isDead = false;
         tdmManager.deathText.enabled = false;
         currentHealth = maxHealth;
+        gunCam.SetActive(true);
 
         GameObject[] allGuns = { AK, Uzi, Colt}; //referencing all guns in player inventory and resetting ammo
         foreach (GameObject gun in allGuns)
         {
             Gun gunSettings = gun.GetComponent<Gun>();
+            gunSettings.currentAmmo = gunSettings.maxAmmo;
             gunSettings.ammoPouch = 90;
         }
 
