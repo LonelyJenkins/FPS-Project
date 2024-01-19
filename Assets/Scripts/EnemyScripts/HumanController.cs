@@ -46,6 +46,8 @@ public class HumanController : MonoBehaviour
     private string weaponType;
     private PlayerController player;
     private TDMManager tdmManager;
+    private GameObject[] patrolPoints;
+    [SerializeField] private Vector3 destination;
 
 
     // Start is called before the first frame update
@@ -61,6 +63,8 @@ public class HumanController : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         DoRagdoll(isDead);
         currentAmmo = maxAmmo;
+        patrolPoints = GameObject.FindGameObjectsWithTag("FriendlySpawn");
+        NewPatrolPoint();//setting initial patrol path
 
         AnimationTypeSet(); //this specifies whether uzi specific animations will play, or rifle specific
 
@@ -137,8 +141,9 @@ public class HumanController : MonoBehaviour
 
         if (closestTarget != null)
         {
-                Vector3 targetPosition = new Vector3(closestTarget.transform.position.x, gameObject.transform.position.y, closestTarget.transform.position.z);
-                transform.LookAt(targetPosition);
+            Vector3 targetPosition = new Vector3(closestTarget.transform.position.x, gameObject.transform.position.y, closestTarget.transform.position.z);
+            transform.LookAt(targetPosition);
+            NewPatrolPoint();//choosing new destination for when closestTarget==null
 
             if (distanceToNearestTarget > chaseRange)
             {//Chase enemy
@@ -166,8 +171,8 @@ public class HumanController : MonoBehaviour
 
         else
         {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            agent.SetDestination(player.transform.position);
+            isWalking = true;
+            agent.SetDestination(destination);
         }
     }
 
@@ -343,6 +348,16 @@ public class HumanController : MonoBehaviour
         else
         {
             Debug.Log("Better Luck Next Kill");
+        }
+    }
+
+    void NewPatrolPoint()
+    {
+        int pointIndex = patrolPoints.Length;
+        destination = patrolPoints[Random.Range(0, pointIndex)].transform.position;
+        if (destination == null)
+        {
+            destination = player.transform.position;
         }
     }
 

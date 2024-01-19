@@ -24,6 +24,7 @@ public class Gun : MonoBehaviour
     public ParticleSystem muzzleFlash;
     public GameObject impactFX;
     public GameObject bodyHitFX;
+    public HitMarker hitMarker;
     public LayerMask ignoreLayers;
     public LayerMask enemyLayer;
     public Animator recoilAnim;
@@ -39,7 +40,6 @@ public class Gun : MonoBehaviour
     private PlayerHud playerHud;
     private WeaponSwitching weaponSwitching;
     private PlayerController playerController;
-    private HitMarker hitMarker;
 
     private void Start()
     {
@@ -47,7 +47,6 @@ public class Gun : MonoBehaviour
         playerHud = GameObject.FindGameObjectWithTag("hud").GetComponent<PlayerHud>();
         gunAnim = gameObject.GetComponent<Animator>();
         playerController = gameObject.GetComponentInParent<PlayerController>();
-        hitMarker = GameObject.FindGameObjectWithTag("HitMarker").GetComponent<HitMarker>();
     }
 
     private void OnEnable()

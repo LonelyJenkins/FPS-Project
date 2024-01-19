@@ -48,6 +48,8 @@ public class SurvivorController : MonoBehaviour
     private PlayerController player;
     private GameManager gameManager;
     private TDMManager tdmManager;
+    private GameObject[] patrolPoints;
+    [SerializeField] private Vector3 destination;
 
 
     // Start is called before the first frame update
@@ -75,6 +77,8 @@ public class SurvivorController : MonoBehaviour
         {
             tdmManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<TDMManager>();
             isAlerted = true;
+            patrolPoints = GameObject.FindGameObjectsWithTag("EnemySpawn");
+            NewPatrolPoint();
         }
     }
 
@@ -146,6 +150,7 @@ public class SurvivorController : MonoBehaviour
         {
             Vector3 targetPosition = new Vector3(closestTarget.transform.position.x, gameObject.transform.position.y, closestTarget.transform.position.z);
             transform.LookAt(targetPosition);
+            NewPatrolPoint();//setting new patrol point for when closestTarget==null
             isWalking = true;
 
             if (distanceToNearestTarget > chaseRange && closestTarget != null)
@@ -172,8 +177,7 @@ public class SurvivorController : MonoBehaviour
         else
         {
             isWalking = true;
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            agent.SetDestination(player.transform.position);
+            agent.SetDestination(destination);
         }
     }
 
@@ -346,6 +350,16 @@ public class SurvivorController : MonoBehaviour
         else
         {
             Debug.Log("Better Luck Next Kill BITCH");
+        }
+    }
+
+    void NewPatrolPoint() //Choosing random positions for AI to patrol to when not encountering hostile AI
+    {
+        int pointIndex = patrolPoints.Length;
+        destination = patrolPoints[Random.Range(0, pointIndex)].transform.position;
+        if (destination == null)
+        {
+            destination = player.transform.position;
         }
     }
 

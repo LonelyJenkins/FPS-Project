@@ -43,12 +43,16 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         mainCam = Camera.main;
-        tdmManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<TDMManager>();
         AK = GameObject.Find("Player/PlayerCharacter/Main Camera/WeaponSlot/AkRecoil/AK-47");
         Uzi = GameObject.Find("Player/PlayerCharacter/Main Camera/WeaponSlot/UziRecoil/Uzi");
         Colt = GameObject.Find("Player/PlayerCharacter/Main Camera/WeaponSlot/ColtM4Recoil/ColtM4");
         SMAW = GameObject.Find("Player/PlayerCharacter/Main Camera/WeaponSlot/SMAWRecoil/SMAW");
         Grenade = GameObject.Find("Player/PlayerCharacter/Main Camera/WeaponSlot/Grenade");
+
+        if (isTDM)
+        {
+            tdmManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<TDMManager>();
+        }
 
         currentHealth = maxHealth;
     }
