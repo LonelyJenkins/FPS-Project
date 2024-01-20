@@ -355,11 +355,20 @@ public class SurvivorController : MonoBehaviour
 
     void NewPatrolPoint() //Choosing random positions for AI to patrol to when not encountering hostile AI
     {
-        int pointIndex = patrolPoints.Length;
-        destination = patrolPoints[Random.Range(0, pointIndex)].transform.position;
-        if (destination == null)
+        if (isSurvival)
         {
             destination = player.transform.position;
+            return;
+        }
+
+        else
+        {
+            int pointIndex = patrolPoints.Length;
+            destination = patrolPoints[Random.Range(0, pointIndex)].transform.position;
+            if (destination == null)
+            {
+                destination = player.transform.position;
+            }
         }
     }
 
