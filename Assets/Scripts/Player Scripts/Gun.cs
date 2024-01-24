@@ -54,6 +54,7 @@ public class Gun : MonoBehaviour
         isReloading = false;
         isShooting = false;
         weaponSwitching = gameObject.GetComponentInParent<WeaponSwitching>();
+        gameObject.transform.localRotation = Quaternion.Euler(0, 0, 0); //Resets object rotation on enable. Addresses bug where rotation is frozen if player dies mid-animation
         gunCam.SetActive(true);
     }
 
@@ -63,26 +64,27 @@ public class Gun : MonoBehaviour
     {
         if (playerController.isDead)
         {
-            gunCam.SetActive(false);
+            gunCam.SetActive(false); //if player dies, weapons will no longer be visible/active
             return;
         }
 
-        gunAnim.SetBool("isReloading", isReloading);
-        weaponSwitching.isReloading = isReloading;
+        gunAnim.SetBool("isReloading", isReloading);//sets animation parameters
+        weaponSwitching.isReloading = isReloading;//addresses bools in weapon switcher that prohibits switching if reloading/ADS
         weaponSwitching.isScoped = isScoped;
 
         if (isReloading)
         {
-            return;
+            return;//prohibits further weapon logic until reloading returns false
         }
 
-        playerHud.ammoPouch = ammoPouch;
+        playerHud.ammoPouch = ammoPouch;//references player hud for ammo data
         playerHud.ammo = currentAmmo;
-        recoilAnim.SetBool("isShooting", isShooting);
+        recoilAnim.SetBool("isShooting", isShooting);//Sets shooting animation if player is actively shooting
 
 
         if (Input.GetKeyDown(KeyCode.R) && ammoPouch > 0 && currentAmmo < maxAmmo || currentAmmo <= 0 && ammoPouch > 0)
         {
+            //reload logic
             StartCoroutine(Reload());
             return;
         }
@@ -91,6 +93,7 @@ public class Gun : MonoBehaviour
 
         if (Input.GetButton("Fire2"))
         {
+            //ADS logic
             isScoped = true;
         }
 
@@ -99,7 +102,7 @@ public class Gun : MonoBehaviour
             isScoped = false;
         }
 
-        if (Input.GetButton("Fire1") && Time.time >= nextFire && currentAmmo > 0)
+        if (Input.GetButton("Fire1") && Time.time >= nextFire && currentAmmo > 0) //shooting logic
         {
             nextFire = Time.time + 1 / fireRate;
             Shoot();
@@ -116,26 +119,26 @@ public class Gun : MonoBehaviour
     void Shoot()
     {
         muzzleFlash.Play();
-        StartCoroutine(muzzleLighting());
+        StartCoroutine(muzzleLighting());//light source activation during muzzle flash
         currentAmmo--;
         Vector3 shootDirection = fpsCam.transform.forward;
 
         if (!isScoped)
         {
-            shootDirection.x += Random.Range(-recoilRotation, recoilRotation);
+            shootDirection.x += Random.Range(-recoilRotation, recoilRotation); //if NOT ADS, gun is less accurate
             shootDirection.y += Random.Range(-recoilRotation, recoilRotation);
             shootDirection.z += Random.Range(0, recoilRotation);
         }
 
         RaycastHit hit;
 
-       if (Physics.Raycast(fpsCam.transform.position, shootDirection, out hit, range, ~ignoreLayers))
+       if (Physics.Raycast(fpsCam.transform.position, shootDirection, out hit, range, ~ignoreLayers)) //checks for type of target is hit, if any
         {
 
             ZombieController zombie = hit.transform.GetComponent<ZombieController>();
             if (zombie != null)
             {
-                zombie.TakeDamage(damage);
+                zombie.TakeDamage(damage, true);
                 GameObject bodyHit = Instantiate(bodyHitFX, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(bodyHit, 1);
                 hitMarker.IndicateHit();
@@ -144,7 +147,7 @@ public class Gun : MonoBehaviour
             HumanController human = hit.transform.GetComponent<HumanController>();
             if (human != null)
             {
-                human.TakeDamage(damage);
+                human.TakeDamage(damage, true);
                 GameObject bodyHit = Instantiate(bodyHitFX, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(bodyHit, 1);
                 hitMarker.IndicateHit();
@@ -153,10 +156,11 @@ public class Gun : MonoBehaviour
             BossController boss = hit.transform.GetComponent<BossController>();
             if (boss != null)
             {
-                boss.TakeDamage(damage);
+                boss.TakeDamage(damage, true);
                 GameObject bodyHit = Instantiate(bodyHitFX, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(bodyHit, 1);
                 hitMarker.IndicateHit();
+
             }
 
             if (hit.rigidbody != null)
@@ -170,7 +174,7 @@ public class Gun : MonoBehaviour
         }
     }
 
-    IEnumerator Reload()
+    IEnumerator Reload() //coroutine set for reload to prevent other logic from being performed until reload time has elapsed
     {
         isReloading = true;
         recoilAnim.enabled = false;

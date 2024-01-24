@@ -75,13 +75,15 @@ public class BossController : MonoBehaviour
         hasAttacked = true;
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(int amount, bool playerAttack)
     {
         health -= amount;
         if (health <= 0)
         {
-            Death();
+            Death(playerAttack);
+            return;
         }
+        playerAttack = false;
     }
 
     void FindClosestTarget()
@@ -114,10 +116,14 @@ public class BossController : MonoBehaviour
         }
     }
 
-    void Death()
+    void Death(bool playerAttack)
     {
         isDead = true;
         gameManager.bossCount--;
+        if (playerAttack == true)
+        {
+            gameManager.playerKillCount++;
+        }
         DropItem();
         Collider collider = gameObject.GetComponent<Collider>();
         collider.enabled = false;

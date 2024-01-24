@@ -55,7 +55,13 @@ public class SurvivorController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        if (isTDM)
+        {
+            tdmManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<TDMManager>();
+            isAlerted = true;
+            patrolPoints = GameObject.FindGameObjectsWithTag("EnemySpawn");
+            NewPatrolPoint();
+        }
     }
 
     private void Awake()
@@ -201,7 +207,7 @@ public class SurvivorController : MonoBehaviour
             ZombieController zombie = hit.transform.GetComponent<ZombieController>();
             if (zombie != null)
             {
-                zombie.TakeDamage(damageInflict);
+                zombie.TakeDamage(damageInflict, false);
                 GameObject bodyHit = Instantiate(bodyHitFX, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(bodyHit, 1);
             }
@@ -209,7 +215,7 @@ public class SurvivorController : MonoBehaviour
             HumanController human = hit.transform.GetComponent<HumanController>();
             if (human != null)
             {
-                human.TakeDamage(damageInflict);
+                human.TakeDamage(damageInflict, false);
                 GameObject bodyHit = Instantiate(bodyHitFX, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(bodyHit, 1);
             }
@@ -217,7 +223,7 @@ public class SurvivorController : MonoBehaviour
             BossController boss = hit.transform.GetComponent<BossController>();
             if (boss != null)
             {
-                boss.TakeDamage(damageInflict);
+                boss.TakeDamage(damageInflict, false);
                 GameObject bodyHit = Instantiate(bodyHitFX, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(bodyHit, 1);
             }

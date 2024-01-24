@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 212768345}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -13246,6 +13246,18 @@ Transform:
   m_Father: {fileID: 1686391025}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 270, z: 90}
+--- !u!114 &462149327 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 462149327, guid: cb53a19ab9d8b42419bd869102b7878e,
+    type: 3}
+  m_PrefabInstance: {fileID: 3345719145490379327}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &462289557
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13567,6 +13579,11 @@ PrefabInstance:
       propertyPath: gunCam
       value: 
       objectReference: {fileID: 1840090221}
+    - target: {fileID: 610474177832969372, guid: 7252ac20e817f9c4abeea2613ffc5f5a,
+        type: 3}
+      propertyPath: maxHealth
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 1397725031701691780, guid: 7252ac20e817f9c4abeea2613ffc5f5a,
         type: 3}
       propertyPath: m_Name
@@ -13582,6 +13599,11 @@ PrefabInstance:
       propertyPath: scopeOverlay
       value: 
       objectReference: {fileID: 630699868}
+    - target: {fileID: 4463261020143710882, guid: 7252ac20e817f9c4abeea2613ffc5f5a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8296172667434762672, guid: 7252ac20e817f9c4abeea2613ffc5f5a,
         type: 3}
       propertyPath: hitMarker
@@ -13641,6 +13663,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8888199187069688058, guid: 7252ac20e817f9c4abeea2613ffc5f5a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7252ac20e817f9c4abeea2613ffc5f5a, type: 3}
@@ -32432,6 +32459,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1280781706}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1284138278 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1284138278, guid: cb53a19ab9d8b42419bd869102b7878e,
+    type: 3}
+  m_PrefabInstance: {fileID: 3345719145490379327}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1286033426
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -52272,6 +52311,16 @@ PrefabInstance:
       propertyPath: enemySpawnPoints.Array.data[4]
       value: 
       objectReference: {fileID: 353872861}
+    - target: {fileID: 3963120453187817858, guid: 31b93d0f09c312743b8da80b58dfec71,
+        type: 3}
+      propertyPath: playerKillText
+      value: 
+      objectReference: {fileID: 1284138278}
+    - target: {fileID: 3963120453187817858, guid: 31b93d0f09c312743b8da80b58dfec71,
+        type: 3}
+      propertyPath: playerDeathCounter
+      value: 
+      objectReference: {fileID: 462149327}
     - target: {fileID: 3963120453187817860, guid: 31b93d0f09c312743b8da80b58dfec71,
         type: 3}
       propertyPath: m_Name

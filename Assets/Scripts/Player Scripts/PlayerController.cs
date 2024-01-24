@@ -137,31 +137,35 @@ public class PlayerController : MonoBehaviour
 
         if (isTDM)
         {
+            tdmManager.playerDeathCount++;
             tdmManager.enemyScore += tdmManager.killValue; //adding score to enemy team if TDM
         }
     }
 
     void Respawn()
     {
-        gameObject.SetActive(false); //Temporarily deactivating player will interrupt any further transform updates until after player is repositioned
-        int randSpawn = Random.Range(0, spawnPoints.Length); //Player spawns in randomly chosen friendly spawnpoint
-        gameObject.transform.position = spawnPoints[randSpawn].transform.position;
-        gameObject.SetActive(true);
-        isDead = false;
-        tdmManager.deathText.enabled = false;
-        currentHealth = maxHealth;
-        gunCam.SetActive(true);
-
-        GameObject[] allGuns = { AK, Uzi, Colt}; //referencing all guns in player inventory and resetting ammo
-        foreach (GameObject gun in allGuns)
+       if (!tdmManager.matchOver)
         {
-            Gun gunSettings = gun.GetComponent<Gun>();
-            gunSettings.currentAmmo = gunSettings.maxAmmo;
-            gunSettings.ammoPouch = 90;
-        }
+            gameObject.SetActive(false); //Temporarily deactivating player will interrupt any further transform updates until after player is repositioned
+            int randSpawn = Random.Range(0, spawnPoints.Length); //Player spawns in randomly chosen friendly spawnpoint
+            gameObject.transform.position = spawnPoints[randSpawn].transform.position;
+            gameObject.SetActive(true);
+            isDead = false;
+            tdmManager.deathText.enabled = false;
+            currentHealth = maxHealth;
+            gunCam.SetActive(true);
 
-        SMAW.GetComponent<RocketLauncher>().ammoPouch = 5; //resetting grenade and rocket inventory
-        Grenade.GetComponent<GrenadeThrower>().ammoPouch = 5;
+            GameObject[] allGuns = { AK, Uzi, Colt }; //referencing all guns in player inventory and resetting ammo
+            foreach (GameObject gun in allGuns)
+            {
+                Gun gunSettings = gun.GetComponent<Gun>();
+                gunSettings.currentAmmo = gunSettings.maxAmmo;
+                gunSettings.ammoPouch = 90;
+            }
+
+            SMAW.GetComponent<RocketLauncher>().ammoPouch = 5; //resetting grenade and rocket inventory
+            Grenade.GetComponent<GrenadeThrower>().ammoPouch = 5;
+        }
     }
 
 

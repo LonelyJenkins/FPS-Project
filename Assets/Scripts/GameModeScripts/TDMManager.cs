@@ -12,6 +12,8 @@ public class TDMManager : MonoBehaviour
     public GameObject[] enemies;
     public GameObject[] friendlies;
     public GameObject player;
+    public int playerKillCount = 0;
+    public int playerDeathCount = 0;
     public int killValue = 1; //score earned for each kill
     public int maxScore = 70; //score to win
     public int friendlyScore = 0;
@@ -24,6 +26,8 @@ public class TDMManager : MonoBehaviour
     [Header("UI Settings")]
     public Text friendlyScoreText;
     public Text enemyScoreText;
+    public Text playerKillText;
+    public Text playerDeathCounter;
     public Text deathText;
     public Text matchEnding;
     public Text losingStatus;
@@ -67,6 +71,8 @@ public class TDMManager : MonoBehaviour
         healthBar.value = playerController.currentHealth;
         friendlyScoreText.text = "" + friendlyScore;
         enemyScoreText.text = "" + enemyScore;
+        playerKillText.text = playerKillCount + " KILLS!";
+        playerDeathCounter.text = playerDeathCount + " DEATHS!";
         UIStatus(); //UI status switcher
 
         if (!matchOver) //continues gamemode logic until game is over
@@ -103,6 +109,8 @@ public class TDMManager : MonoBehaviour
         {
             matchEnding.text = "NOBODY WINS IN WAR " + enemyScore + " = " + friendlyScore;
         }
+
+        Time.timeScale = 0.1f;
 
     }
 

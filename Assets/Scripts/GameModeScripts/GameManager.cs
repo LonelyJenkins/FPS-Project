@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     public GameObject[] friendlies;
     public GameObject player;
     public GameObject boss;
+    public int playerKillCount = 0;
     public int enemyCount = 0;
     public int bossCount = 0;
     public int startingFriendlyCount;
@@ -32,6 +33,7 @@ public class GameManager : MonoBehaviour
     public Text enemyCounter;
     public Text doorCounter;
     public Text friendlyCounter;
+    public Text playerKillText;
     public Slider healthBar;
 
     private int lastBossWave;

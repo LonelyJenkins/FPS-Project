@@ -43,6 +43,7 @@ public class RocketLauncher : MonoBehaviour
     {
         isReloading = false;
         weaponSwitching = gameObject.GetComponentInParent<WeaponSwitching>();
+        gameObject.transform.localRotation = Quaternion.Euler(0, 0, 0); //Resets object rotation on enable. Addresses bug where rotation is frozen if player dies mid-animation
 
     }
 

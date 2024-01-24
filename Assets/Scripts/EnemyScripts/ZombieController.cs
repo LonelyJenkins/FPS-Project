@@ -83,14 +83,17 @@ public class ZombieController : MonoBehaviour
         zombieAnim.SetBool("isIdle" + idleAnimation, true);
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(int amount, bool playerAttack)
     {
         hasBeenShot = true;
         health -= amount;
         if (health <= 0)
         {
-            Death();
+            Death(playerAttack);
+            return;
         }
+
+        playerAttack = false;
     }
 
     void FindClosestTarget()
@@ -136,7 +139,7 @@ public class ZombieController : MonoBehaviour
             HumanController human = attackable.GetComponent<HumanController>();
             if (human != null)
             {
-                human.TakeDamage(damageDealt);
+                human.TakeDamage(damageDealt, false);
             }
 
             PlayerController _player = attackable.GetComponent<PlayerController>();
@@ -160,10 +163,14 @@ public class ZombieController : MonoBehaviour
         return;
     }
 
-    void Death()
+    void Death(bool playerAttack)
     {
         isDead = true;
         gameManager.enemyCount --;
+        if (playerAttack == true)
+        {
+            gameManager.playerKillCount++;
+        }
         DropItem();
         Collider collider = gameObject.GetComponent<Collider>();
         collider.enabled = false;

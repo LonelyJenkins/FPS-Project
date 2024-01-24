@@ -196,7 +196,7 @@ public class HumanController : MonoBehaviour
             ZombieController zombie = hit.transform.GetComponent<ZombieController>();
             if (zombie != null)
             {
-                zombie.TakeDamage(damageInflict);
+                zombie.TakeDamage(damageInflict, false);
                 GameObject bodyHit = Instantiate(bodyHitFX, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(bodyHit, 1);
             }
@@ -220,7 +220,7 @@ public class HumanController : MonoBehaviour
             BossController boss = hit.transform.GetComponent<BossController>();
             if (boss != null)
             {
-                boss.TakeDamage(damageInflict);
+                boss.TakeDamage(damageInflict, false);
                 GameObject bodyHit = Instantiate(bodyHitFX, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(bodyHit, 1);
             }
@@ -252,18 +252,20 @@ public class HumanController : MonoBehaviour
         humanAnim.SetBool("shoot" + weaponType, false);
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage(int amount, bool playerAttack)
     {
         isAlerted = true;
 
         health -= amount;
         if (health <= 0)
         {
-            Death();
+            Death(playerAttack);
+            return;
         }
+        playerAttack = false;
     }
 
-    void Death()
+    void Death(bool playerAttack)
     {
         isDead = true;
         DropItem();
@@ -277,6 +279,11 @@ public class HumanController : MonoBehaviour
         if (isTDM)
         {
             tdmManager.friendlyScore += tdmManager.killValue;
+
+            if (playerAttack == true)
+            {
+                tdmManager.playerKillCount++;
+            }
             tdmManager.SpawnNext(1);
         }
     }

@@ -54,19 +54,19 @@ public class Grenade : MonoBehaviour
             ZombieController zombie = nearbyObject.GetComponent<ZombieController>();
             if (zombie != null)
             {
-                zombie.TakeDamage(damageInflict);
+                zombie.TakeDamage(damageInflict, true);
             }
 
             HumanController human = nearbyObject.GetComponent<HumanController>();
             if (human != null)
             {
-                human.TakeDamage(damageInflict);
+                human.TakeDamage(damageInflict, true);
             }
 
             BossController boss = nearbyObject.GetComponent<BossController>();
             if (boss != null)
             {
-                boss.TakeDamage(damageInflict);
+                boss.TakeDamage(damageInflict, true);
             }
         }
 

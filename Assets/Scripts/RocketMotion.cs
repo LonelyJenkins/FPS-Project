@@ -22,7 +22,7 @@ public class RocketMotion : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Translate(Vector3.forward * speed * Time.deltaTime);
+        transform.Translate(Vector3.forward * speed * Time.deltaTime); //gravitational influence and flight path of the rocket
         velocity.y += gravity * Time.deltaTime;
         transform.Translate(velocity * Time.deltaTime);
 
@@ -30,11 +30,8 @@ public class RocketMotion : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy") || other.CompareTag("Ground") || other.CompareTag("Human") || other.CompareTag("Door"))
-        {
-            DetachSmoke();
-            Impact();
-        }
+        DetachSmoke();
+        Impact();
     }
 
     void Impact()
@@ -49,19 +46,19 @@ public class RocketMotion : MonoBehaviour
             ZombieController zombie = nearbyObject.GetComponent<ZombieController>();
             if (zombie != null)
             {
-                zombie.TakeDamage(damageInflict);
+                zombie.TakeDamage(damageInflict, true);
             }
 
             HumanController human = nearbyObject.GetComponent<HumanController>();
             if (human != null)
             {
-                human.TakeDamage(damageInflict);
+                human.TakeDamage(damageInflict, true);
             }
 
             BossController boss = nearbyObject.GetComponent<BossController>();
             if (boss != null)
             {
-                boss.TakeDamage(damageInflict);
+                boss.TakeDamage(damageInflict, true);
             }
         }
 
@@ -80,12 +77,12 @@ public class RocketMotion : MonoBehaviour
 
     IEnumerator RocketLifetime()
     {
-        yield return new WaitForSeconds(lifeTime);
+        yield return new WaitForSeconds(lifeTime); //explodes rocket if it has not impacted anything for designated timespan
 
         Impact();
     }
 
-    void DetachSmoke()
+    void DetachSmoke() //leaves smoke particles in scene after parent object has been destroyed
     {
         Transform smokeTrail = transform.Find("SmokeTrail");
         if (smokeTrail != null)

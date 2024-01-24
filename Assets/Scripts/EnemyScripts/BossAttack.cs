@@ -24,7 +24,7 @@ public class BossAttack : MonoBehaviour
 
         if (other.CompareTag("Human"))
         {
-            other.GetComponent<HumanController>().TakeDamage(damageDealt);
+            other.GetComponent<HumanController>().TakeDamage(damageDealt, false);
             boss.AttackForce(gameObject.transform.position);
         }
 
