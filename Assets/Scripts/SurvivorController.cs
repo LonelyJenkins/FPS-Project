@@ -49,19 +49,13 @@ public class SurvivorController : MonoBehaviour
     private GameManager gameManager;
     private TDMManager tdmManager;
     private GameObject[] patrolPoints;
-    [SerializeField] private Vector3 destination;
+    private Vector3 destination;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        if (isTDM)
-        {
-            tdmManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<TDMManager>();
-            isAlerted = true;
-            patrolPoints = GameObject.FindGameObjectsWithTag("EnemySpawn");
-            NewPatrolPoint();
-        }
+
     }
 
     private void Awake()
@@ -71,9 +65,6 @@ public class SurvivorController : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         DoRagdoll(isDead);
         currentAmmo = maxAmmo;
-
-        AnimationTypeSet();
-        //this specifies whether uzi type animations will play, or rifle type
 
         if (isSurvival)
         {
@@ -87,6 +78,10 @@ public class SurvivorController : MonoBehaviour
             patrolPoints = GameObject.FindGameObjectsWithTag("EnemySpawn");
             NewPatrolPoint();
         }
+
+        AnimationTypeSet();
+        //this specifies whether uzi type animations will play, or rifle type
+
     }
 
     // Update is called once per frame
@@ -373,7 +368,7 @@ public class SurvivorController : MonoBehaviour
             return;
         }
 
-        else if (!isSurvival)
+        else
         {
             int pointIndex = patrolPoints.Length;
             if (pointIndex != null) //addresses issue when patrol points cant be found

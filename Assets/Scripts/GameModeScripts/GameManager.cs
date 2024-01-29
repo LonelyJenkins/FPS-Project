@@ -54,13 +54,24 @@ public class GameManager : MonoBehaviour
         playerController.isTDM = false;
         playerController.isSurvival = true;
         //Assigning unique gamemode settings to player controller
+
+        for (int i = 0; i < startingFriendlyCount; i++)
+        {
+            //This spawns initial wave of friendly NPCs
+            int friendlyIndex = Random.Range(0, friendlies.Length); //chooses random friendly prefab
+            int friendlySpawnIndex = Random.Range(0, friendlySpawnPoints.Length);//chooses random spawn point
+            Instantiate(friendlies[friendlyIndex], friendlySpawnPoints[friendlySpawnIndex].transform.position, Quaternion.identity);
+            friendlies[friendlyIndex].GetComponent<SurvivorController>().isSurvival = true; //assigns game mode to friendly NPCs
+        }
+
+
         friendlyCount += startingFriendlyCount;
-        //Begins rounds with predetermined amount of friendly NPCs
+        //Announces number of friendlies currently ingame
         waveNumber++;
         //Begins wave count
         lastBossWave = 0;
         //Data used to calculate Boss wave intervals
-        NextWave();
+        NextWave(); //Begins game for player
     }
 
     // Update is called once per frame
