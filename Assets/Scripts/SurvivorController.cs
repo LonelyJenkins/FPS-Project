@@ -78,6 +78,7 @@ public class SurvivorController : MonoBehaviour
         if (isSurvival)
         {
             gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+            NewPatrolPoint();
         }
         else if (isTDM)
         {
@@ -182,6 +183,11 @@ public class SurvivorController : MonoBehaviour
 
         else
         {
+            if (isSurvival)
+            {
+                NewPatrolPoint();
+            }
+
             isWalking = true;
             agent.SetDestination(destination);
         }
@@ -367,14 +373,19 @@ public class SurvivorController : MonoBehaviour
             return;
         }
 
-        else
+        else if (!isSurvival)
         {
             int pointIndex = patrolPoints.Length;
-            destination = patrolPoints[Random.Range(0, pointIndex)].transform.position;
-            if (destination == null)
+            if (pointIndex != null) //addresses issue when patrol points cant be found
+            {
+                destination = patrolPoints[Random.Range(0, pointIndex)].transform.position;
+            }
+
+            else
             {
                 destination = player.transform.position;
             }
+
         }
     }
 

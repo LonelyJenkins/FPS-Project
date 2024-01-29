@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
     public GameObject[] friendlies;
     public GameObject player;
     public GameObject boss;
+    public int enemyIncrease = 4;//the amount of enemies that are added into each additional round
+    public int bossIncrease = 2; //the amount of bosses added into each additional boss round
     public int playerKillCount = 0;
     public int enemyCount = 0;
     public int bossCount = 0;
@@ -69,6 +71,7 @@ public class GameManager : MonoBehaviour
         enemyCounter.text = ("Enemies Left: " + enemyCount);
         doorCounter.text = ("Cabins Remaining: " + doorsRemaining);
         friendlyCounter.text = ("Survivors Alive: " + friendlyCount);
+        playerKillText.text = ("Kills: " + playerKillCount);
 
         //Check for player death.
         if (playerController.isDead == true)
@@ -116,7 +119,7 @@ public class GameManager : MonoBehaviour
         //Calculates the amount of enemies to spawn in for current wave
         roundOver = false;
         enemyCount = lastEnemyCount;
-        enemyCount += 4;
+        enemyCount += enemyIncrease;
         lastEnemyCount = enemyCount;
         isEnemyWave = true;
 
@@ -137,7 +140,7 @@ public class GameManager : MonoBehaviour
         roundOver = false;
         lastBossWave = waveNumber;
         bossCount = lastBossCount;
-        bossCount += 2;
+        bossCount += bossIncrease;
         lastBossCount = bossCount;
         isBossWave = true;
 
