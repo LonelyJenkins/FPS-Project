@@ -18,22 +18,38 @@ public class ZombieController : MonoBehaviour
     public float attackRange = 1;
     public int damageDealt = 20;
     public float despawnTime = 4.0f;
+    public bool isSurvival;
+    public bool isChaos;
 
     private NavMeshAgent agent;
     private Animator zombieAnim;
     private PlayerController playerController;
     private GameManager gameManager;
+    private CHAOSManager chaosManager;
     private bool hasBeenShot = false;
     private bool hasAttacked = false;
 
     // Start is called before the first frame update
     void Start()
     {
+
+    }
+
+    private void Awake()
+    {
+        if (isSurvival)
+        {
+            gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
+            isAlerted = true;
+        }
+        else if (isChaos)
+        {
+            chaosManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<CHAOSManager>();
+        }
+
         agent = gameObject.GetComponent<NavMeshAgent>();
         zombieAnim = gameObject.GetComponentInChildren<Animator>();
         playerController = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
-        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-        isAlerted = true;
 
         //ragdoll state is set inactive
         DoRagdoll(isDead);
@@ -46,15 +62,9 @@ public class ZombieController : MonoBehaviour
     {
         zombieAnim.SetBool("isAlerted", isAlerted);
 
-           if (Physics.CheckSphere(alarmCheck.position, 35, attackableLayers) && !playerController.isDead || hasBeenShot && !playerController.isDead)
+           if (Physics.CheckSphere(alarmCheck.position, 35, attackableLayers) || hasBeenShot)
            {
                isAlerted = true;
-           }
-
-           else if (playerController.isDead && !isDead)
-           {
-               isAlerted = false;
-               agent.SetDestination(transform.position);
            }
 
            if (isAlerted && !isDead)
@@ -166,11 +176,21 @@ public class ZombieController : MonoBehaviour
     void Death(bool playerAttack)
     {
         isDead = true;
-        gameManager.enemyCount --;
-        if (playerAttack == true)
+
+        if (isSurvival)
         {
-            gameManager.playerKillCount++;
+            gameManager.enemyCount--;
+            if (playerAttack == true)
+            {
+                gameManager.playerKillCount++;
+            }
         }
+
+        else if (isChaos && playerAttack == true)
+        {
+            chaosManager.playerKillCount++;
+        }
+
         DropItem();
         Collider collider = gameObject.GetComponent<Collider>();
         collider.enabled = false;

@@ -25,12 +25,14 @@ public class PlayerController : MonoBehaviour
     [Header("GameMode Settings")]
     public bool isSurvival = false;
     public bool isTDM = false;
+    public bool isChaos = false;
     public Transform[] spawnPoints;
 
     private float groundDistance = 0.4f;
     private bool isGrounded;
     private bool isPointingAtDoor;
     private TDMManager tdmManager;
+    private CHAOSManager chaosManager;
     private Camera mainCam;
     private Vector3 velocity;
     private GameObject AK;
@@ -52,6 +54,11 @@ public class PlayerController : MonoBehaviour
         if (isTDM)
         {
             tdmManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<TDMManager>();
+        }
+        
+        else if (isChaos)
+        {
+            chaosManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<CHAOSManager>();
         }
 
         currentHealth = maxHealth;
@@ -108,7 +115,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        else if (isDead && isTDM) //if TDM, you are able to respawn
+        else if (isDead && isTDM || isDead && isChaos) //if TDM or Chaos, you are able to respawn
         {
             if (Input.GetButtonDown("Jump"))
             {
@@ -140,11 +147,16 @@ public class PlayerController : MonoBehaviour
             tdmManager.playerDeathCount++;
             tdmManager.enemyScore += tdmManager.killValue; //adding score to enemy team if TDM
         }
+
+        else if (isChaos)
+        {
+            chaosManager.friendliesLeft--;
+        }
     }
 
     void Respawn()
     {
-       if (!tdmManager.matchOver)
+       if (!tdmManager.matchOver || !chaosManager.matchOver)
         {
             gameObject.SetActive(false); //Temporarily deactivating player will interrupt any further transform updates until after player is repositioned
             int randSpawn = Random.Range(0, spawnPoints.Length); //Player spawns in randomly chosen friendly spawnpoint

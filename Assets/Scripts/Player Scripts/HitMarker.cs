@@ -18,7 +18,7 @@ public class HitMarker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (hitTime <= hitTime + returnTime) //checking time elapsed from hit time to return time
+        if (Time.time >= hitTime + returnTime) //checking time elapsed from hit time to return time
         {
             hitMarker.enabled = false;
         }
@@ -28,6 +28,7 @@ public class HitMarker : MonoBehaviour
     {
 
         hitMarker.enabled = true;
+        hitTime = Time.time;
 
     }
 }

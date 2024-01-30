@@ -21,6 +21,7 @@ public class HumanController : MonoBehaviour
     public GameObject dropItem;
     public bool isAlerted;
     public bool isTDM;
+    public bool isChaos;
     [Space()]
 
     [Header("Weapon Settings")]
@@ -46,6 +47,7 @@ public class HumanController : MonoBehaviour
     private string weaponType;
     private PlayerController player;
     private TDMManager tdmManager;
+    private CHAOSManager chaosManager;
     private GameObject[] patrolPoints;
     [SerializeField] private Vector3 destination;
 
@@ -63,14 +65,23 @@ public class HumanController : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         DoRagdoll(isDead);
         currentAmmo = maxAmmo;
-        patrolPoints = GameObject.FindGameObjectsWithTag("FriendlySpawn");
-        NewPatrolPoint();//setting initial patrol path
 
         AnimationTypeSet(); //this specifies whether uzi specific animations will play, or rifle specific
 
         if (isTDM) //assigning unique settings for TDM game mode 
         {
             tdmManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<TDMManager>();
+            isAlerted = true;
+            patrolPoints = GameObject.FindGameObjectsWithTag("FriendlySpawn");
+            NewPatrolPoint();//setting initial patrol path
+        }
+
+        else
+        {
+            chaosManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<CHAOSManager>();
+            isAlerted = true;
+            patrolPoints = GameObject.FindGameObjectsWithTag("FriendlySpawn");
+            NewPatrolPoint();//setting initial patrol path
         }
     }
 
@@ -285,6 +296,16 @@ public class HumanController : MonoBehaviour
                 tdmManager.playerKillCount++;
             }
             tdmManager.SpawnNext(1);
+        }
+
+        else
+        {
+            chaosManager.enemyHumansLeft--;
+            if (playerAttack == true)
+            {
+                chaosManager.playerKillCount++;
+            }
+            chaosManager.SpawnNext(1);
         }
     }
 

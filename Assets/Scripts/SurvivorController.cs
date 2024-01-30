@@ -21,6 +21,7 @@ public class SurvivorController : MonoBehaviour
     public GameObject dropItem;
     public bool isTDM = false;
     public bool isSurvival = false;
+    public bool isChaos = false;
     [Space()]
 
     [Header("Weapon Settings")]
@@ -48,6 +49,7 @@ public class SurvivorController : MonoBehaviour
     private PlayerController player;
     private GameManager gameManager;
     private TDMManager tdmManager;
+    private CHAOSManager chaosManager;
     private GameObject[] patrolPoints;
     private Vector3 destination;
 
@@ -74,6 +76,14 @@ public class SurvivorController : MonoBehaviour
         else if (isTDM)
         {
             tdmManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<TDMManager>();
+            isAlerted = true;
+            patrolPoints = GameObject.FindGameObjectsWithTag("EnemySpawn");
+            NewPatrolPoint();
+        }
+
+        else
+        {
+            chaosManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<CHAOSManager>();
             isAlerted = true;
             patrolPoints = GameObject.FindGameObjectsWithTag("EnemySpawn");
             NewPatrolPoint();
@@ -178,7 +188,7 @@ public class SurvivorController : MonoBehaviour
 
         else
         {
-            if (isSurvival)
+            if (isSurvival || isChaos)
             {
                 NewPatrolPoint();
             }
@@ -286,6 +296,11 @@ public class SurvivorController : MonoBehaviour
         {
             tdmManager.enemyScore += tdmManager.killValue;
             tdmManager.SpawnNext(2);
+        }
+        else
+        {
+            chaosManager.friendliesLeft--;
+            chaosManager.SpawnNext(2);
         }
     }
 
