@@ -4223,6 +4223,9 @@ MonoBehaviour:
   rig: {fileID: 2578358760813799534}
   dropItem: {fileID: 5063400780624281602, guid: 7acc507b2da10734da029fbb9ebb8c6e,
     type: 3}
+  isAlerted: 1
+  isTDM: 0
+  isChaos: 0
   maxAmmo: 30
   currentAmmo: 0
   damageInflict: 10
@@ -4236,6 +4239,7 @@ MonoBehaviour:
   impactFX: {fileID: 519020513901723882, guid: e32ee0956618e4c4182a4d16b4ede0e1, type: 3}
   enemyInSight: 0
   isDead: 0
+  destination: {x: 0, y: 0, z: 0}
 --- !u!1 &6749121737253908661
 GameObject:
   m_ObjectHideFlags: 0

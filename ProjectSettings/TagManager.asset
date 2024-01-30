@@ -17,6 +17,9 @@ TagManager:
   - HitMarker
   - FriendlySpawn
   - EnemySpawn
+  - ZombieSpawn
+  - ChaosManager
+  - Identifier
   layers:
   - Default
   - TransparentFX

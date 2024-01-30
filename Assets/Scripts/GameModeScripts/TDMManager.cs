@@ -42,8 +42,6 @@ public class TDMManager : MonoBehaviour
     {
         matchOver = false;
         playerController = player.GetComponentInChildren<PlayerController>();
-        playerController.isSurvival = false;
-        playerController.isTDM = true; //Assigning unique gamemode settings to player controller
         healthBar.maxValue = playerController.maxHealth;// Assigning value to the healthbar
 
         //spawning all NPCs at start of the game
@@ -52,8 +50,6 @@ public class TDMManager : MonoBehaviour
             int enemyIndex = Random.Range(0, enemies.Length);
             int spawnIndex = Random.Range(0, enemySpawnPoints.Length);
             Instantiate(enemies[enemyIndex], enemySpawnPoints[spawnIndex].transform.position, Quaternion.identity);
-            enemies[enemyIndex].GetComponent<HumanController>().isAlerted = true;
-            enemies[enemyIndex].GetComponent<HumanController>().isTDM = true;
         }
 
         for (int i = 0; i < friendlyCount; i++)
@@ -61,7 +57,6 @@ public class TDMManager : MonoBehaviour
             int friendlyIndex = Random.Range(0, friendlies.Length);
             int spawnIndex = Random.Range(0, friendlySpawnPoints.Length);
             Instantiate(friendlies[friendlyIndex], friendlySpawnPoints[spawnIndex].transform.position, Quaternion.identity);
-            friendlies[friendlyIndex].GetComponent<SurvivorController>().isTDM = true;
         }
     }
 
@@ -121,8 +116,6 @@ public class TDMManager : MonoBehaviour
             int enemyIndex = Random.Range(0, enemies.Length);
             int spawnIndex = Random.Range(0, enemySpawnPoints.Length);
             Instantiate(enemies[enemyIndex], enemySpawnPoints[spawnIndex].transform.position, Quaternion.identity);
-            enemies[enemyIndex].GetComponent<HumanController>().isAlerted = true;
-            enemies[enemyIndex].GetComponent<HumanController>().isTDM = true;
             Debug.Log("BADDIE HAS SPAWNED");
         }
 

@@ -50,6 +50,7 @@ public class SurvivorController : MonoBehaviour
     private GameManager gameManager;
     private TDMManager tdmManager;
     private CHAOSManager chaosManager;
+    private Identifier identifier;
     private GameObject[] patrolPoints;
     private Vector3 destination;
 
@@ -67,31 +68,43 @@ public class SurvivorController : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         DoRagdoll(isDead);
         currentAmmo = maxAmmo;
-
-        if (isSurvival)
-        {
-            gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-            NewPatrolPoint();
-        }
-        else if (isTDM)
-        {
-            tdmManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<TDMManager>();
-            isAlerted = true;
-            patrolPoints = GameObject.FindGameObjectsWithTag("EnemySpawn");
-            NewPatrolPoint();
-        }
-
-        else
-        {
-            chaosManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<CHAOSManager>();
-            isAlerted = true;
-            patrolPoints = GameObject.FindGameObjectsWithTag("EnemySpawn");
-            NewPatrolPoint();
-        }
-
         AnimationTypeSet();
         //this specifies whether uzi type animations will play, or rifle type
 
+
+        GameObject manager = GameObject.FindGameObjectWithTag("GameManager");
+        identifier = manager.GetComponentInChildren<Identifier>();
+
+        if (identifier.isChaos == true)
+        {
+            isChaos = true;
+            isTDM = false;
+            isSurvival = false;
+            isAlerted = true;
+            chaosManager = manager.GetComponent<CHAOSManager>();
+            patrolPoints = GameObject.FindGameObjectsWithTag("EnemySpawn");
+
+        }
+
+        if (identifier.isTDM == true)
+        {
+            isTDM = true;
+            isChaos = false;
+            isSurvival = false;
+            isAlerted = true;
+            tdmManager = manager.GetComponent<TDMManager>();
+            patrolPoints = GameObject.FindGameObjectsWithTag("EnemySpawn");
+        }
+
+        if (identifier.isSurvival == true)
+        {
+            isSurvival = true;
+            isTDM = false;
+            isChaos = false;
+            gameManager = manager.GetComponent<GameManager>();
+        }
+
+        NewPatrolPoint();
     }
 
     // Update is called once per frame

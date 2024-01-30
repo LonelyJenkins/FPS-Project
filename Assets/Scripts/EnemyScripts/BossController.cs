@@ -7,6 +7,8 @@ public class BossController : MonoBehaviour
 {
     public bool isAlerted = true;
     public bool isDead = false;
+    public bool isSurvival = false;
+    public bool isChaos = false;
     public GameObject rig;
     public GameObject dropItem;
     public int health = 500;
@@ -24,18 +26,40 @@ public class BossController : MonoBehaviour
     private NavMeshAgent agent;
     private Animator bossAnim;
     private GameManager gameManager;
+    private CHAOSManager chaosManager;
+    private Identifier identifier;
     private bool hasAttacked = false;
 
 
     // Start is called before the first frame update
     void Start()
     {
+
+    }
+
+    private void Awake()
+    {
         agent = gameObject.GetComponent<NavMeshAgent>();
         bossAnim = gameObject.GetComponent<Animator>();
-        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-
         DoRagdoll(isDead, true);
         isAlerted = true;
+
+        GameObject manager = GameObject.FindGameObjectWithTag("GameManager");
+        identifier = manager.GetComponentInChildren<Identifier>();
+
+        if (identifier.isChaos == true)
+        {
+            isChaos = true;
+            isSurvival = false;
+            chaosManager = manager.GetComponent<CHAOSManager>();
+        }
+
+        if (identifier.isSurvival == true)
+        {
+            isSurvival = true;
+            isChaos = false;
+            gameManager = manager.GetComponent<GameManager>();
+        }
     }
 
     // Update is called once per frame
@@ -119,11 +143,6 @@ public class BossController : MonoBehaviour
     void Death(bool playerAttack)
     {
         isDead = true;
-        gameManager.bossCount--;
-        if (playerAttack == true)
-        {
-            gameManager.playerKillCount++;
-        }
         DropItem();
         Collider collider = gameObject.GetComponent<Collider>();
         collider.enabled = false;
@@ -131,6 +150,24 @@ public class BossController : MonoBehaviour
         agent.enabled = false;
         bossAnim.enabled = false;
         DoRagdoll(isDead, true);
+
+        if(isSurvival)
+        {
+            gameManager.bossCount--;
+            if (playerAttack == true)
+            {
+                gameManager.playerKillCount++;
+            }
+        }
+
+        else if (isChaos)
+        {
+            chaosManager.zombieKillCounter++;
+            if (playerAttack == true)
+            {
+                chaosManager.playerKillCount++;
+            }
+        }
     }
 
     void DoRagdoll(bool deathState, bool canAttack)

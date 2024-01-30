@@ -18,14 +18,15 @@ public class ZombieController : MonoBehaviour
     public float attackRange = 1;
     public int damageDealt = 20;
     public float despawnTime = 4.0f;
-    public bool isSurvival;
-    public bool isChaos;
+    public bool isSurvival = false;
+    public bool isChaos = false;
 
     private NavMeshAgent agent;
     private Animator zombieAnim;
     private PlayerController playerController;
     private GameManager gameManager;
     private CHAOSManager chaosManager;
+    private Identifier identifier;
     private bool hasBeenShot = false;
     private bool hasAttacked = false;
 
@@ -37,14 +38,22 @@ public class ZombieController : MonoBehaviour
 
     private void Awake()
     {
-        if (isSurvival)
+        GameObject manager = GameObject.FindGameObjectWithTag("GameManager");
+        identifier = manager.GetComponentInChildren<Identifier>();
+
+        if (identifier.isChaos)
         {
-            gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();
-            isAlerted = true;
+            isChaos = true;
+            isSurvival = false;
+            chaosManager = manager.GetComponent<CHAOSManager>();
         }
-        else if (isChaos)
+
+        if (identifier.isSurvival)
         {
-            chaosManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<CHAOSManager>();
+            isSurvival = true;
+            isChaos = false;
+            isAlerted = true;
+            gameManager = manager.GetComponent<GameManager>();
         }
 
         agent = gameObject.GetComponent<NavMeshAgent>();
@@ -186,9 +195,13 @@ public class ZombieController : MonoBehaviour
             }
         }
 
-        else if (isChaos && playerAttack == true)
+        else if (isChaos)
         {
-            chaosManager.playerKillCount++;
+            chaosManager.zombieKillCounter++;
+            if (playerAttack == true)
+            {
+                chaosManager.playerKillCount++;
+            }
         }
 
         DropItem();
