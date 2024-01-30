@@ -9,7 +9,7 @@ public class MouseLook : MonoBehaviour
     public float fallSpeed = 1;
 
     private float xRotation = 0;
-    private bool hasLanded = false;
+    private bool hasLanded = false;//bool for coded death animation (ONLY FUNCTIONAL IN SURVIVAL GAME MODE)
     private PlayerController playerController;
     // Start is called before the first frame update
     void Start()
@@ -36,14 +36,14 @@ public class MouseLook : MonoBehaviour
 
         else
         {
-                if (!hasLanded && !playerController.isTDM)
-                transform.Translate(Vector3.down * fallSpeed * Time.deltaTime);
+                if (!hasLanded && !playerController.isTDM && !playerController.isChaos)
+                transform.Translate(Vector3.down * fallSpeed * Time.deltaTime); //This acts as the motion for the death animation in survival mode
         }
 
     }
 
     private void OnTriggerEnter(Collider other)
-    {//ground check to ensure death camera does not clip through floor
+    {//ground check to ensure death camera does not clip through floor. This acts as the death animation for survival mode
         if (other.CompareTag("Ground"))
         {
             hasLanded = true;

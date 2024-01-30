@@ -78,7 +78,7 @@ public class RocketMotion : MonoBehaviour
     IEnumerator RocketLifetime()
     {
         yield return new WaitForSeconds(lifeTime); //explodes rocket if it has not impacted anything for designated timespan
-
+        DetachSmoke();
         Impact();
     }
 

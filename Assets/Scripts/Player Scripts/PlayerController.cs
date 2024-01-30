@@ -23,14 +23,17 @@ public class PlayerController : MonoBehaviour
     [Space()]
 
     [Header("GameMode Settings")]
+    //THE GAME MODE BOOLS MUST BE CHECKED IN THE UNITY EDITOR
     public bool isSurvival = false;
     public bool isTDM = false;
+    public bool isChaos = false;
     public Transform[] spawnPoints;
 
     private float groundDistance = 0.4f;
     private bool isGrounded;
     private bool isPointingAtDoor;
     private TDMManager tdmManager;
+    private CHAOSManager chaosManager;
     private Camera mainCam;
     private Vector3 velocity;
     private GameObject AK;
@@ -42,19 +45,28 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        if (isTDM)
+        {
+            tdmManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<TDMManager>();
+        }
+
+        else if (isChaos)
+        {
+            chaosManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<CHAOSManager>();
+        }
+
         mainCam = Camera.main;
         AK = GameObject.Find("Player/PlayerCharacter/Main Camera/WeaponSlot/AkRecoil/AK-47");
         Uzi = GameObject.Find("Player/PlayerCharacter/Main Camera/WeaponSlot/UziRecoil/Uzi");
         Colt = GameObject.Find("Player/PlayerCharacter/Main Camera/WeaponSlot/ColtM4Recoil/ColtM4");
         SMAW = GameObject.Find("Player/PlayerCharacter/Main Camera/WeaponSlot/SMAWRecoil/SMAW");
         Grenade = GameObject.Find("Player/PlayerCharacter/Main Camera/WeaponSlot/Grenade");
-
-        if (isTDM)
-        {
-            tdmManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<TDMManager>();
-        }
-
         currentHealth = maxHealth;
+    }
+
+    private void Awake()
+    {
+
     }
 
     // Update is called once per frame
@@ -108,7 +120,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        else if (isDead && isTDM) //if TDM, you are able to respawn
+        else if (isDead && isTDM || isDead && isChaos) //if TDM or Chaos, you are able to respawn
         {
             if (Input.GetButtonDown("Jump"))
             {
@@ -140,18 +152,31 @@ public class PlayerController : MonoBehaviour
             tdmManager.playerDeathCount++;
             tdmManager.enemyScore += tdmManager.killValue; //adding score to enemy team if TDM
         }
+
+        else if (isChaos)
+        {
+            chaosManager.friendliesLeft--;
+        }
     }
 
     void Respawn()
     {
-       if (!tdmManager.matchOver)
-        {
             gameObject.SetActive(false); //Temporarily deactivating player will interrupt any further transform updates until after player is repositioned
             int randSpawn = Random.Range(0, spawnPoints.Length); //Player spawns in randomly chosen friendly spawnpoint
             gameObject.transform.position = spawnPoints[randSpawn].transform.position;
             gameObject.SetActive(true);
             isDead = false;
+
+        if (isTDM)
+        {
             tdmManager.deathText.enabled = false;
+        }
+        
+        else
+        {
+            chaosManager.deathText.enabled = false;
+        }
+
             currentHealth = maxHealth;
             gunCam.SetActive(true);
 
@@ -165,7 +190,6 @@ public class PlayerController : MonoBehaviour
 
             SMAW.GetComponent<RocketLauncher>().ammoPouch = 5; //resetting grenade and rocket inventory
             Grenade.GetComponent<GrenadeThrower>().ammoPouch = 5;
-        }
     }
 
 

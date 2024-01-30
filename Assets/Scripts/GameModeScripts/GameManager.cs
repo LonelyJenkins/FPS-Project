@@ -51,8 +51,6 @@ public class GameManager : MonoBehaviour
     {
         playerController = player.GetComponent<PlayerController>();
         healthBar.maxValue = playerController.maxHealth;//Assigning value to the health bar
-        playerController.isTDM = false;
-        playerController.isSurvival = true;
         //Assigning unique gamemode settings to player controller
 
         for (int i = 0; i < startingFriendlyCount; i++)
@@ -61,7 +59,6 @@ public class GameManager : MonoBehaviour
             int friendlyIndex = Random.Range(0, friendlies.Length); //chooses random friendly prefab
             int friendlySpawnIndex = Random.Range(0, friendlySpawnPoints.Length);//chooses random spawn point
             Instantiate(friendlies[friendlyIndex], friendlySpawnPoints[friendlySpawnIndex].transform.position, Quaternion.identity);
-            friendlies[friendlyIndex].GetComponent<SurvivorController>().isSurvival = true; //assigns game mode to friendly NPCs
         }
 
 
@@ -140,7 +137,8 @@ public class GameManager : MonoBehaviour
             int enemyIndex = Random.Range(0, enemies.Length);
             int spawnIndex = Random.Range(0, enemySpawnPoints.Length);
             Instantiate(enemies[enemyIndex], enemySpawnPoints[spawnIndex].transform.position, Quaternion.identity);
-            enemies[enemyIndex].GetComponent<ZombieController>().isAlerted = true;
+            ZombieController zombieSettings = enemies[enemyIndex].GetComponent<ZombieController>();
+            zombieSettings.isAlerted = true;
         }
 
     }
@@ -160,7 +158,8 @@ public class GameManager : MonoBehaviour
         {
             int spawnIndex = Random.Range(0, enemySpawnPoints.Length);
             Instantiate(boss, enemySpawnPoints[spawnIndex].transform.position, Quaternion.identity);
-            boss.GetComponent<BossController>().isAlerted = true;
+            BossController bossSettings = GetComponent<BossController>();
+            bossSettings.isAlerted = true;
         }
     }
 
@@ -179,7 +178,6 @@ public class GameManager : MonoBehaviour
                         friendlyCount++; //updates the friendly NPC count in the HUD
                         int friendlyIndex = Random.Range(0, friendlies.Length); //chooses random friendly prefab
                         Instantiate(friendlies[friendlyIndex], friendlySpawn.transform.position, Quaternion.identity);
-                        friendlies[friendlyIndex].GetComponent<SurvivorController>().isSurvival = true;
                     }
 
                 }

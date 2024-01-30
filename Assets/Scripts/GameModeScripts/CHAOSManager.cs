@@ -3,29 +3,38 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TDMManager : MonoBehaviour
+public class CHAOSManager : MonoBehaviour
 {
+    //logic for chaos mode will go here.
+    //Very similar to TDM but with zombie spawner continually spawning in zombies and occasionally boss monsters. Zombies will count towards player kills, however overall team score will remain unaffected.
+    //THERE WILL BE IDLE ZOMBIES SCATTERED ABOUT THE MAP THAT WILL AGGRO WHEN BOTHERED. THIS SHOWCASES IDLE ANIMS
+
+
     [Header("Game Mode Settings")]
     public GameObject[] friendlySpawnPoints;
     public GameObject[] enemySpawnPoints;
+    public GameObject[] zombieSpawnPoints;
     public GameObject[] ammoPickups;
     public GameObject[] enemies;
     public GameObject[] friendlies;
+    public GameObject[] zombies;
+    public GameObject bossMonster;
     public GameObject player;
+    public int zombieSpawnTime = 10; //how long before new zombie prefab is instantiated
+    public int bossSpawnChance = 5;//A random integer between 0 and bossSpawnChance is utilized to create variable probability of bossMonster spawns
     public int playerKillCount = 0;
     public int playerDeathCount = 0;
-    public int killValue = 1; //score earned for each kill
-    public int maxScore = 70; //score to win
-    public int friendlyScore = 0;
-    public int enemyScore = 0;
+    public int friendliesLeft = 100; //How many friendlies are left before match over state is triggered
+    public int enemyHumansLeft = 100;//How many enemies are left before match over state is triggered
     public int friendlyCount = 0; //max friendlies to spawn/have in game
     public int enemyCount = 0; //max enemies to spawn/have in game
+    public int zombieKillCounter = 0; //Value stored to show how many zombies were killed  during the match
     public bool matchOver;
     [Space]
 
     [Header("UI Settings")]
-    public Text friendlyScoreText;
-    public Text enemyScoreText;
+    public Text friendliesLeftText;
+    public Text enemiesLeftText;
     public Text playerKillText;
     public Text playerDeathCounter;
     public Text deathText;
@@ -37,6 +46,7 @@ public class TDMManager : MonoBehaviour
 
 
     private PlayerController playerController;
+    private float time = 0;
 
     void Start()
     {
@@ -64,11 +74,27 @@ public class TDMManager : MonoBehaviour
     {
         //This will keep track of all data for HUD
         healthBar.value = playerController.currentHealth;
-        friendlyScoreText.text = "" + friendlyScore;
-        enemyScoreText.text = "" + enemyScore;
+        friendliesLeftText.text = friendliesLeft + " SURVIVORS ALIVE";
+        enemiesLeftText.text = enemyHumansLeft + " ENEMIES ALIVE";
         playerKillText.text = playerKillCount + " KILLS!";
         playerDeathCounter.text = playerDeathCount + " DEATHS!";
         UIStatus(); //UI status switcher
+
+        if (Time.time >= time) //spawning zombies at the set spawnzombie interval. Includes random chance of boss monster spawning
+        {
+            int spawnChance = Random.Range(0, bossSpawnChance+1);
+            if (spawnChance == bossSpawnChance)
+            {
+                SpawnBoss();
+            }
+
+            else
+            {
+                SpawnZombie();
+            }
+
+            time = Time.time + zombieSpawnTime;
+        }
 
         if (!matchOver) //continues gamemode logic until game is over
         {
@@ -77,11 +103,10 @@ public class TDMManager : MonoBehaviour
             if (playerController.isDead == true)
             {
                 deathText.enabled = true;
-                return;
             }
 
             //Ends match based on team scores
-            if (friendlyScore >= maxScore || enemyScore >= maxScore)
+            if (friendliesLeft <= 0|| enemyHumansLeft <= 0)
             {
                 EndMatch();
             }
@@ -91,18 +116,18 @@ public class TDMManager : MonoBehaviour
     void EndMatch()
     {
         matchOver = true;
-        if (enemyScore > friendlyScore)
+        if (enemyHumansLeft > friendliesLeft)
         {
-            matchEnding.text = "HOSTILES WIN! " + enemyScore + " > " + friendlyScore;
+            matchEnding.text = "ENEMIES HAVE WON! " + enemyHumansLeft + " have survived the night. AND " + zombieKillCounter + " ZEDS WERE KILLED";
         }
-        else if (enemyScore < friendlyScore)
+        else if (enemyHumansLeft < friendliesLeft)
         {
-            matchEnding.text = "SURVIVORS WIN! " + enemyScore + " < " + friendlyScore;
+            matchEnding.text = "SURVIVORS WIN! " + friendliesLeft + " have survived the night. AND " + zombieKillCounter + " ZEDS WERE KILLED";
         }
 
         else
         {
-            matchEnding.text = "NOBODY WINS IN WAR " + enemyScore + " = " + friendlyScore;
+            matchEnding.text = "Everyone has succumbed to the madess.";
         }
 
         Time.timeScale = 0.1f;
@@ -119,7 +144,7 @@ public class TDMManager : MonoBehaviour
             Debug.Log("BADDIE HAS SPAWNED");
         }
 
-        else if (isEnemy ==2)
+        else if (isEnemy == 2)
         {
             int friendlyIndex = Random.Range(0, friendlies.Length);
             int spawnIndex = Random.Range(0, friendlySpawnPoints.Length);
@@ -128,17 +153,39 @@ public class TDMManager : MonoBehaviour
         }
     }
 
+    void SpawnZombie()
+    {
+        int zombieIndex = Random.Range(0, zombies.Length);
+        int spawnIndex = Random.Range(0, zombieSpawnPoints.Length);
+        Instantiate(zombies[zombieIndex], zombieSpawnPoints[spawnIndex].transform.position, Quaternion.identity);
+        ZombieController zombieSettings = zombies[zombieIndex].GetComponent<ZombieController>();
+        zombieSettings.isAlerted = true;
+        Debug.Log("A ZOMBIE HAS ARRIVED ON SITE");
+
+    }
+
+    void SpawnBoss()
+    {
+        int spawnIndex = Random.Range(0, zombieSpawnPoints.Length);
+        Instantiate(bossMonster, zombieSpawnPoints[spawnIndex].transform.position, Quaternion.identity);
+        BossController bossSettings = bossMonster.GetComponent<BossController>();
+        bossSettings.isAlerted = true;
+        Debug.Log("A BOSS HAS ENTERED THE MATCH");
+    }
+
+
+
     void UIStatus() //This switches the UI text indicating if player's team is winning, losing, or tied, while match is active
     {
         if (!matchOver)
         {
-            if (enemyScore > friendlyScore)
+            if (enemyHumansLeft > friendliesLeft)
             {
                 losingStatus.enabled = true;
                 winningStatus.enabled = false;
                 tiedStatus.enabled = false;
             }
-            else if (enemyScore < friendlyScore)
+            else if (enemyHumansLeft < friendliesLeft)
             {
                 winningStatus.enabled = true;
                 losingStatus.enabled = false;

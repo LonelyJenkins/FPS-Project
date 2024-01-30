@@ -20,7 +20,8 @@ public class HumanController : MonoBehaviour
     public GameObject rig;
     public GameObject dropItem;
     public bool isAlerted;
-    public bool isTDM;
+    public bool isTDM = false;
+    public bool isChaos = false;
     [Space()]
 
     [Header("Weapon Settings")]
@@ -46,6 +47,8 @@ public class HumanController : MonoBehaviour
     private string weaponType;
     private PlayerController player;
     private TDMManager tdmManager;
+    private CHAOSManager chaosManager;
+    private Identifier identifier;
     private GameObject[] patrolPoints;
     [SerializeField] private Vector3 destination;
 
@@ -63,15 +66,31 @@ public class HumanController : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         DoRagdoll(isDead);
         currentAmmo = maxAmmo;
-        patrolPoints = GameObject.FindGameObjectsWithTag("FriendlySpawn");
-        NewPatrolPoint();//setting initial patrol path
 
         AnimationTypeSet(); //this specifies whether uzi specific animations will play, or rifle specific
 
-        if (isTDM) //assigning unique settings for TDM game mode 
+        GameObject manager = GameObject.FindGameObjectWithTag("GameManager");
+        identifier = manager.GetComponentInChildren<Identifier>();
+
+        if (identifier.isChaos == true)
         {
-            tdmManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<TDMManager>();
+            isChaos = true;
+            isTDM = false;
+            chaosManager = manager.GetComponent<CHAOSManager>();
+
         }
+
+        if (identifier.isTDM == true)
+        {
+            isTDM = true;
+            isChaos = false;
+            tdmManager = manager.GetComponent<TDMManager>();
+        }
+
+        isAlerted = true;
+
+        patrolPoints = GameObject.FindGameObjectsWithTag("FriendlySpawn");
+        NewPatrolPoint();//setting initial patrol path
     }
 
     // Update is called once per frame
@@ -143,7 +162,6 @@ public class HumanController : MonoBehaviour
         {
             Vector3 targetPosition = new Vector3(closestTarget.transform.position.x, gameObject.transform.position.y, closestTarget.transform.position.z);
             transform.LookAt(targetPosition);
-            NewPatrolPoint();//choosing new destination for when closestTarget==null
 
             if (distanceToNearestTarget > chaseRange)
             {//Chase enemy
@@ -276,7 +294,7 @@ public class HumanController : MonoBehaviour
         Destroy(gameObject, despawnTime);
         DoRagdoll(isDead);
 
-        if (isTDM)
+        if (isTDM == true)
         {
             tdmManager.friendlyScore += tdmManager.killValue;
 
@@ -285,6 +303,16 @@ public class HumanController : MonoBehaviour
                 tdmManager.playerKillCount++;
             }
             tdmManager.SpawnNext(1);
+        }
+
+        else if (isChaos == true)
+        {
+            chaosManager.enemyHumansLeft--;
+            if (playerAttack == true)
+            {
+                chaosManager.playerKillCount++;
+            }
+            chaosManager.SpawnNext(1);
         }
     }
 
