@@ -158,7 +158,7 @@ public class GameManager : MonoBehaviour
         {
             int spawnIndex = Random.Range(0, enemySpawnPoints.Length);
             Instantiate(boss, enemySpawnPoints[spawnIndex].transform.position, Quaternion.identity);
-            BossController bossSettings = GetComponent<BossController>();
+            BossController bossSettings = boss.GetComponent<BossController>();
             bossSettings.isAlerted = true;
         }
     }

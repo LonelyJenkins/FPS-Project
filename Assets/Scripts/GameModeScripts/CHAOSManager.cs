@@ -138,6 +138,11 @@ public class CHAOSManager : MonoBehaviour
     {
         if (isEnemy == 1)
         {
+            if (enemyHumansLeft <= enemyCount) //stops spawning enemies when the humansLeft value is smaller than the max amount allowed on the map. 
+            {
+                return;
+            }
+
             int enemyIndex = Random.Range(0, enemies.Length);
             int spawnIndex = Random.Range(0, enemySpawnPoints.Length);
             Instantiate(enemies[enemyIndex], enemySpawnPoints[spawnIndex].transform.position, Quaternion.identity);
@@ -146,6 +151,11 @@ public class CHAOSManager : MonoBehaviour
 
         else if (isEnemy == 2)
         {
+            if (friendliesLeft <= friendlyCount) //stops spawning friendlies if the friendliesLeft value is smaller than max amount of friendlies allowed on the map. This intentionally does not account for player.
+            {
+                return;
+            }
+
             int friendlyIndex = Random.Range(0, friendlies.Length);
             int spawnIndex = Random.Range(0, friendlySpawnPoints.Length);
             Instantiate(friendlies[friendlyIndex], friendlySpawnPoints[spawnIndex].transform.position, Quaternion.identity);
