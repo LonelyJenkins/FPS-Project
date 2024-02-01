@@ -6,24 +6,25 @@ using UnityEngine.AI;
 public class ZombieController : MonoBehaviour
 {
     public bool isAlerted;
-    public Transform alarmCheck;
+    public Transform alarmCheck; //distance from which zombie will be triggered if in idle state
     public LayerMask attackableLayers;
     public LayerMask damageableLayers;
     public int health = 100;
     public bool isDead = false;
-    public GameObject rig;
+    public GameObject rig; //the part of the gameObject that is parent to all of the parts of the gameObject. This is to activate ragdoll state on death
     public GameObject dropItem;
-    public Transform attackPosition;
-    public float attackDistance;
-    public float attackRange = 1;
-    public int damageDealt = 20;
-    public float despawnTime = 4.0f;
-    public bool isSurvival = false;
-    public bool isChaos = false;
+    public Transform attackPosition; //points on prefab that inflict damage on other attackable types (ex. hands)
+    public float attackDistance;//the radius of which the attack positions can affect
+    public float attackRange = 1;//the distance from the zombie an attackable must be before an attack is triggered
+    public int damageDealt = 20; //value of damage against attackable
+    public float despawnTime = 4.0f; //length of time before prefab is destroyed after death state is triggered
+    public bool isSurvival = false; //game mode check
+    public bool isChaos = false;// see above
 
     private NavMeshAgent agent;
     private Animator zombieAnim;
     private PlayerController playerController;
+    private Transform playerPosition;
     private GameManager gameManager;
     private CHAOSManager chaosManager;
     private Identifier identifier;
@@ -39,7 +40,8 @@ public class ZombieController : MonoBehaviour
     private void Awake()
     {
         GameObject manager = GameObject.FindGameObjectWithTag("GameManager");
-        identifier = manager.GetComponentInChildren<Identifier>();
+        identifier = manager.GetComponentInChildren<Identifier>(); //checking for game mode type
+
 
         if (identifier.isChaos)
         {
@@ -70,18 +72,19 @@ public class ZombieController : MonoBehaviour
     void Update()
     {
         zombieAnim.SetBool("isAlerted", isAlerted);
+        playerPosition = playerController.transform; //actively keeping track of player position in case other attackables are not in attack range
 
-           if (Physics.CheckSphere(alarmCheck.position, 35, attackableLayers) || hasBeenShot)
+           if (Physics.CheckSphere(alarmCheck.position, 35, attackableLayers) || hasBeenShot) //if the zombie has been attacked or alert radius has been entered then zombie will enter aggro state
            {
                isAlerted = true;
            }
 
-           if (isAlerted && !isDead)
+           if (isAlerted && !isDead) //actively searches for nearest target once aggro state is active
            {
                FindClosestTarget();
            }
 
-        if (Physics.CheckSphere(gameObject.transform.position, attackRange, damageableLayers) && isAlerted && !hasAttacked)
+        if (Physics.CheckSphere(gameObject.transform.position, attackRange, damageableLayers) && isAlerted && !hasAttacked) //if attackable is in the attack radius, an attack is triggered as long as the attack reload has been complete
         {
             Attack();
         }
@@ -91,31 +94,29 @@ public class ZombieController : MonoBehaviour
     {
         if (other.CompareTag("Door"))
         {
-            gameObject.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.1f);
+            gameObject.transform.position = new Vector3(transform.position.x, transform.position.y, transform.position.z - 0.1f); //prevents zombies from clipping through doors in survival mode
         }
     }
 
     void RandomIdleAnim()
-    {//random selection of idle animations with varying animation speeds
+    {//machine that determines a random idle animation on start
         int idleAnimation = Random.Range(1, 4);
         zombieAnim.speed = Random.Range(0.8f, 1.4f);
         zombieAnim.SetBool("isIdle" + idleAnimation, true);
     }
 
-    public void TakeDamage(int amount, bool playerAttack)
+    public void TakeDamage(int amount, bool playerAttack) //takes value of incoming damage and checks if damage was from player.
     {
         hasBeenShot = true;
         health -= amount;
         if (health <= 0)
         {
-            Death(playerAttack);
+            Death(playerAttack); //if killing blow was given by player, this bool is given to the death state
             return;
         }
-
-        playerAttack = false;
     }
 
-    void FindClosestTarget()
+    void FindClosestTarget() //checking all targets within alarm radius to determine the closest one. That one is then chosen as the destination
     {
         float distanceToNearestTarget = Mathf.Infinity;
         Collider closestTarget = null;
@@ -131,26 +132,25 @@ public class ZombieController : MonoBehaviour
             }
         }
 
-        if (closestTarget != null)
+        if (closestTarget != null) //if a target is in range then zombie will approach it
         {
             agent.SetDestination(closestTarget.transform.position);
         }
 
-        else
+        else //if no targets are in range then player is default target
         {
-            GameObject player = GameObject.FindGameObjectWithTag("Player");
-            agent.SetDestination(player.transform.position);
+            agent.SetDestination(playerPosition.position);
         }
     }
 
 
     void Attack()
     {
-        StartCoroutine(AttackReload(1));
-        int attackType = Random.Range(1, 3);
+        StartCoroutine(AttackReload(1)); //timer is triggered to reset attack after initial attack has been triggered
+        int attackType = Random.Range(1, 3); //machine determines a random attack animation
         zombieAnim.SetTrigger("Attack" + attackType);
         hasAttacked = true;
-        Collider[] target = Physics.OverlapSphere(attackPosition.position, attackDistance, damageableLayers);
+        Collider[] target = Physics.OverlapSphere(attackPosition.position, attackDistance, damageableLayers); //checking for targets hit, if any
         foreach (Collider attackable in target)
         {
             Debug.Log(gameObject.name + " Has hit " + attackable.name);
@@ -176,13 +176,13 @@ public class ZombieController : MonoBehaviour
             DoorController door = attackable.GetComponent<DoorController>();
             if (door != null)
             {
-                door.TakeDamage(damageDealt);
+                door.TakeDamage(damageDealt); //zombies can damage doors in survival mode. Ultimately can destroy cabin
             }
         }
         return;
     }
 
-    void Death(bool playerAttack)
+    void Death(bool playerAttack) //death state. Checks if killing blow was made by player
     {
         isDead = true;
 
@@ -229,7 +229,7 @@ public class ZombieController : MonoBehaviour
     }
 
     void DropItem()
-    {
+    { //machine that determines if an item is dropped after death state is triggered
         int dropChance = Random.Range(1, 4);
         if (dropChance == 1)
         {
@@ -241,13 +241,13 @@ public class ZombieController : MonoBehaviour
         }
     }
 
-    IEnumerator AttackReload(int reloadTime)
+    IEnumerator AttackReload(int reloadTime) //timer that determines how long until another attack can be performed
     {
         yield return new WaitForSeconds(reloadTime);
         hasAttacked = false;
     }
 
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmosSelected() //visible representation of how large the attack radius is. This is specifically for Unity editor
     {
         Gizmos.DrawWireSphere(attackPosition.position, attackDistance);
     }

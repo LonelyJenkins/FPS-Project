@@ -8,7 +8,7 @@ public class Gun : MonoBehaviour
     [Header("Gun Settings: ")]
     public int damage = 10;
     public float range = 100;
-    public float impactForce = 30;
+    public float impactForce = 3000;
     public float fireRate = 15;
     public int maxAmmo = 10;
     public int ammoPouch = 90;
@@ -40,6 +40,9 @@ public class Gun : MonoBehaviour
     private PlayerHud playerHud;
     private WeaponSwitching weaponSwitching;
     private PlayerController playerController;
+    private Light lightFlash;
+    private float flashDuration;
+    private float lightStartTime;
 
     private void Start()
     {
@@ -47,6 +50,9 @@ public class Gun : MonoBehaviour
         playerHud = GameObject.FindGameObjectWithTag("hud").GetComponent<PlayerHud>();
         gunAnim = gameObject.GetComponent<Animator>();
         playerController = gameObject.GetComponentInParent<PlayerController>();
+        flashDuration = (muzzleFlash.main.duration / 2);
+        lightFlash = muzzleLight.GetComponent<Light>();
+
     }
 
     private void OnEnable()
@@ -106,7 +112,12 @@ public class Gun : MonoBehaviour
         {
             nextFire = Time.time + 1 / fireRate;
             Shoot();
-            isShooting = true;
+            isShooting = true;//setting shoot animation
+        }
+
+        if (Time.time >= lightStartTime + flashDuration) //logic for resetting muzzleFlash lighting
+        {
+            muzzleLight.SetActive(false);
         }
 
         if (Input.GetButtonUp("Fire1") || currentAmmo <= 0)
@@ -118,8 +129,11 @@ public class Gun : MonoBehaviour
 
     void Shoot()
     {
-        muzzleFlash.Play();
-        StartCoroutine(muzzleLighting());//light source activation during muzzle flash
+        muzzleFlash.Play(); //logic for muzzle flash vfx
+        lightStartTime = Time.time;
+        lightFlash.range = (Random.Range(3, 9));
+        muzzleLight.SetActive(true);
+        //further shooting logic begins
         currentAmmo--;
         Vector3 shootDirection = fpsCam.transform.forward;
 
@@ -208,5 +222,4 @@ public class Gun : MonoBehaviour
         yield return new WaitForSeconds(muzzleFlash.main.duration/2.5f);
         muzzleLight.SetActive(false);
     }
-
 }

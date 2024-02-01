@@ -52,6 +52,7 @@ public class SurvivorController : MonoBehaviour
     private CHAOSManager chaosManager;
     private Identifier identifier;
     private GameObject[] patrolPoints;
+    private bool pointAssigned = false; //switch set to ensure only a singular patrol point is assigned when needed
     private Vector3 destination;
 
 
@@ -105,6 +106,7 @@ public class SurvivorController : MonoBehaviour
         }
 
         NewPatrolPoint();
+        pointAssigned = true;
     }
 
     // Update is called once per frame
@@ -173,6 +175,7 @@ public class SurvivorController : MonoBehaviour
 
         if (closestTarget != null)
         {
+            pointAssigned = false;
             Vector3 targetPosition = new Vector3(closestTarget.transform.position.x, gameObject.transform.position.y, closestTarget.transform.position.z);
             transform.LookAt(targetPosition);
             NewPatrolPoint();//setting new patrol point for when closestTarget==null
@@ -201,7 +204,7 @@ public class SurvivorController : MonoBehaviour
 
         else
         {
-            if (isSurvival || isChaos)
+            if (isSurvival)
             {
                 NewPatrolPoint();
             }
@@ -402,6 +405,7 @@ public class SurvivorController : MonoBehaviour
             if (pointIndex != null) //addresses issue when patrol points cant be found
             {
                 destination = patrolPoints[Random.Range(0, pointIndex)].transform.position;
+                pointAssigned = true;
             }
 
             else
