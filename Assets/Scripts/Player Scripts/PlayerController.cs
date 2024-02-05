@@ -27,11 +27,11 @@ public class PlayerController : MonoBehaviour
     public bool isSurvival = false;
     public bool isTDM = false;
     public bool isChaos = false;
+    public bool isPointingAtDoor = false; //only toggled in survival mode
     public Transform[] spawnPoints;
 
     private float groundDistance = 0.4f;
     private bool isGrounded;
-    private bool isPointingAtDoor;
     private TDMManager tdmManager;
     private CHAOSManager chaosManager;
     private Camera mainCam;
@@ -62,11 +62,6 @@ public class PlayerController : MonoBehaviour
         SMAW = GameObject.Find("Player/PlayerCharacter/Main Camera/WeaponSlot/SMAWRecoil/SMAW");
         Grenade = GameObject.Find("Player/PlayerCharacter/Main Camera/WeaponSlot/Grenade");
         currentHealth = maxHealth;
-    }
-
-    private void Awake()
-    {
-
     }
 
     // Update is called once per frame
@@ -102,6 +97,7 @@ public class PlayerController : MonoBehaviour
             controller.Move(velocity * Time.deltaTime);
 
             //Door Interaction for survival gamemode
+            isPointingAtDoor = false;
             if (Physics.Raycast(mainCam.transform.position, mainCam.transform.forward, out RaycastHit hit, doorCheckDistance, doorLayer))
             {
                 DoorController door = hit.transform.GetComponentInChildren<DoorController>();
@@ -109,15 +105,12 @@ public class PlayerController : MonoBehaviour
                     {
                         isPointingAtDoor = true;
                     }
-                    else
-                    {
-                        isPointingAtDoor = false;
-                    }
 
                 if (isPointingAtDoor && Input.GetKeyDown(KeyCode.E))
                 {
                     door.isOpen = !door.isOpen;
                 }
+
             }
         }
         else if (isDead && isTDM || isDead && isChaos) //if TDM or Chaos, you are able to respawn

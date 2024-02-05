@@ -5,11 +5,6 @@ using UnityEngine.UI;
 
 public class CHAOSManager : MonoBehaviour
 {
-    //logic for chaos mode will go here.
-    //Very similar to TDM but with zombie spawner continually spawning in zombies and occasionally boss monsters. Zombies will count towards player kills, however overall team score will remain unaffected.
-    //THERE WILL BE IDLE ZOMBIES SCATTERED ABOUT THE MAP THAT WILL AGGRO WHEN BOTHERED. THIS SHOWCASES IDLE ANIMS
-
-
     [Header("Game Mode Settings")]
     public GameObject[] friendlySpawnPoints;
     public GameObject[] enemySpawnPoints;
@@ -127,7 +122,7 @@ public class CHAOSManager : MonoBehaviour
 
         else
         {
-            matchEnding.text = "Everyone has succumbed to the madess.";
+            matchEnding.text = "Everyone has succumbed to the madness.";
         }
 
         Time.timeScale = 0.1f;
@@ -138,7 +133,7 @@ public class CHAOSManager : MonoBehaviour
     {
         if (isEnemy == 1)
         {
-            if (enemyHumansLeft <= enemyCount) //stops spawning enemies when the humansLeft value is smaller than the max amount allowed on the map. 
+            if (enemyHumansLeft <= enemyCount-1) //stops spawning enemies when the humansLeft value is smaller than the max amount allowed on the map. 
             {
                 return;
             }
@@ -151,7 +146,7 @@ public class CHAOSManager : MonoBehaviour
 
         else if (isEnemy == 2)
         {
-            if (friendliesLeft <= friendlyCount) //stops spawning friendlies if the friendliesLeft value is smaller than max amount of friendlies allowed on the map. This intentionally does not account for player.
+            if (friendliesLeft <= friendlyCount-1) //stops spawning friendlies if the friendliesLeft value is smaller than max amount of friendlies allowed on the map. This intentionally does not account for player.
             {
                 return;
             }

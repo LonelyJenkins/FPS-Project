@@ -25,9 +25,9 @@ public class GameManager : MonoBehaviour
     public int startingFriendlyCount;
     public int friendlyCount = 0;
     public int waveNumber = 0;
-    public int doorsRemaining = 3;
-    public int bossWaveInterval = 4;
-    public int roundIntervalTime = 8;
+    public int doorsRemaining = 3; //keeps track of how many cabins remain
+    public int bossWaveInterval = 4; //how many rounds before another boss wave is triggered
+    public int roundIntervalTime = 8; //time between each round
     [Space]
 
     [Header("UI Settings")]
@@ -36,10 +36,11 @@ public class GameManager : MonoBehaviour
     public Text doorCounter;
     public Text friendlyCounter;
     public Text playerKillText;
+    public Text doorIndicator; //This text will popup to show player they can interact with a cabin door when in range. This is toggled in the player controller
     public Slider healthBar;
 
-    private int lastBossWave;
-    private int lastEnemyCount;
+    private int lastBossWave; //retains wave number from last boss wave to determine the next one
+    private int lastEnemyCount; //retains enemy count to determine how many are spawned in the next round
     private int lastBossCount;
     private bool isBossWave;
     private bool isEnemyWave;
@@ -80,6 +81,7 @@ public class GameManager : MonoBehaviour
         doorCounter.text = ("Cabins Remaining: " + doorsRemaining);
         friendlyCounter.text = ("Survivors Alive: " + friendlyCount);
         playerKillText.text = ("Kills: " + playerKillCount);
+        doorIndicator.enabled = playerController.isPointingAtDoor;
 
         //Check for player death.
         if (playerController.isDead == true)

@@ -41413,8 +41413,8 @@ MonoBehaviour:
   bossSpawnChance: 4
   playerKillCount: 0
   playerDeathCount: 0
-  friendliesLeft: 80
-  enemyHumansLeft: 80
+  friendliesLeft: 90
+  enemyHumansLeft: 90
   friendlyCount: 20
   enemyCount: 20
   zombieKillCounter: 0
