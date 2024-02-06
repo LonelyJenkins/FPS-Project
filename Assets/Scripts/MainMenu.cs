@@ -16,20 +16,24 @@ public class MainMenu : MonoBehaviour
     public void PlayTDM()
     {
         SceneManager.LoadScene(2);
+        Time.timeScale = 1;
     }
 
     public void PlaySurvival()
     {
         SceneManager.LoadScene(1);
+        Time.timeScale = 1;
     }
 
     public void PlayChaos()
     {
         SceneManager.LoadScene(3);
+        Time.timeScale = 1;
     }
 
     public void OpenMenu()
     {
         SceneManager.LoadScene(0);
+        Time.timeScale = 1;
     }
 }
