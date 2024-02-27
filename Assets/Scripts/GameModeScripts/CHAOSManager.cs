@@ -113,11 +113,11 @@ public class CHAOSManager : MonoBehaviour
         matchOver = true;
         if (enemyHumansLeft > friendliesLeft)
         {
-            matchEnding.text = "ENEMIES HAVE WON! " + enemyHumansLeft + " have survived the night. AND " + zombieKillCounter + " ZEDS WERE KILLED";
+            matchEnding.text = "ENEMIES WIN! " + enemyHumansLeft + " have survived the night. "+ zombieKillCounter + " ZEDS WERE KILLED";
         }
         else if (enemyHumansLeft < friendliesLeft)
         {
-            matchEnding.text = "SURVIVORS WIN! " + friendliesLeft + " have survived the night. AND " + zombieKillCounter + " ZEDS WERE KILLED";
+            matchEnding.text = "SURVIVORS WIN! " + friendliesLeft + " have survived the night. " + zombieKillCounter + " ZEDS WERE KILLED";
         }
 
         else

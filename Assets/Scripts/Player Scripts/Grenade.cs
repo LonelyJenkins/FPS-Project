@@ -25,7 +25,7 @@ public class Grenade : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        countDown -= Time.deltaTime;
+        countDown -= Time.deltaTime;//actively counting down until explosion
         if (countDown <= 0 && !hasExploded)
         {
             Explode();
@@ -36,7 +36,7 @@ public class Grenade : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
-            rigidBody.velocity = Vector3.zero;
+            rigidBody.velocity = Vector3.zero; //grenade drops at the feet of enemy game objects if it collides with them
         }
     }
 
@@ -44,11 +44,11 @@ public class Grenade : MonoBehaviour
     {
         hasExploded = true;
 
-        Instantiate(explosionFx, transform.position, transform.rotation);
+        Instantiate(explosionFx, transform.position, transform.rotation); //spawning explosion particle effects
 
         Collider[] collidersToDamage = Physics.OverlapSphere(transform.position, damageRadius);
 
-        foreach (Collider nearbyObject in collidersToDamage)
+        foreach (Collider nearbyObject in collidersToDamage) //damamges all relevant colliders within radius
         {
 
             ZombieController zombie = nearbyObject.GetComponent<ZombieController>();
@@ -72,7 +72,7 @@ public class Grenade : MonoBehaviour
 
         Collider[] collidersToMove = Physics.OverlapSphere(transform.position, damageRadius);
 
-        foreach (Collider nearbyObject in collidersToMove)
+        foreach (Collider nearbyObject in collidersToMove) //applies explosion force to all relevant physics objects within radius
         {
             Rigidbody rb = nearbyObject.GetComponent<Rigidbody>();
             if (rb != null)

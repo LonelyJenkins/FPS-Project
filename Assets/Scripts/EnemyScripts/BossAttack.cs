@@ -6,8 +6,10 @@ public class BossAttack : MonoBehaviour
 {
     private BossController boss;
     private int damageDealt;
-    // Start is called before the first frame update
-    void Start()
+
+    //created to deal with collisions between boss monster hands and other objects
+
+    void Awake()
     {
         boss = gameObject.GetComponentInParent<BossController>();
         damageDealt = boss.damageDealt;
@@ -16,6 +18,11 @@ public class BossAttack : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        boss.AttackSFXTrigger();
+
+
+        // if hands collide with relevant objects, then damage will be dealt
+
         if (other.CompareTag("Player"))
         {
             other.GetComponent<PlayerController>().TakeDamage(damageDealt);

@@ -23,7 +23,7 @@ public class MouseLook : MonoBehaviour
     {
         if (!playerController.isDead)
 
-        {
+        { //logic for player and mouse interaction
             float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
             float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 

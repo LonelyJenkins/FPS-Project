@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 
 public class Gun : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class Gun : MonoBehaviour
     public float reloadTime = 1;
     public bool isScoped = false;
     public float recoilRotation = 0.1f;
+    public AudioClip gunShotSFX;
+    public AudioClip reloadSFX;
     [Space()]
 
     [Header("Objects & Layermasks")]
@@ -40,6 +43,7 @@ public class Gun : MonoBehaviour
     private PlayerHud playerHud;
     private WeaponSwitching weaponSwitching;
     private PlayerController playerController;
+    private AudioSource gunAudio;
     private Light lightFlash;
     private float flashDuration;
     private float lightStartTime;
@@ -49,6 +53,7 @@ public class Gun : MonoBehaviour
         currentAmmo = maxAmmo;
         playerHud = GameObject.FindGameObjectWithTag("hud").GetComponent<PlayerHud>();
         gunAnim = gameObject.GetComponent<Animator>();
+        gunAudio = gameObject.GetComponent<AudioSource>();
         playerController = gameObject.GetComponentInParent<PlayerController>();
         flashDuration = (muzzleFlash.main.duration / 2);
         lightFlash = muzzleLight.GetComponent<Light>();
@@ -129,6 +134,7 @@ public class Gun : MonoBehaviour
 
     void Shoot()
     {
+        gunAudio.PlayOneShot(gunShotSFX);
         muzzleFlash.Play(); //logic for muzzle flash vfx
         lightStartTime = Time.time;
         lightFlash.range = (Random.Range(3, 9));
@@ -193,6 +199,7 @@ public class Gun : MonoBehaviour
         isReloading = true;
         recoilAnim.enabled = false;
         isShooting = false;
+        gunAudio.PlayOneShot(reloadSFX);
 
         yield return new WaitForSeconds(reloadTime);
 

@@ -5,8 +5,8 @@ using UnityEngine;
 public class DoorController : MonoBehaviour
 {
     public bool isOpen;
-    public GameObject[] lights;
-    public GameObject[] spawnPoints;
+    public GameObject[] lights; //tracking the lights in the cabins. They will be deactivated if the door is destroyed
+    public GameObject[] spawnPoints; //tracking spawn points within cabin
     public int health = 200;
     public bool isBroken = false;
     private Animator anim;
@@ -35,7 +35,7 @@ public class DoorController : MonoBehaviour
 
     private void Break()
     {
-        isBroken = true;
+        isBroken = true; //deactivating the cabin, rendering spawn points within the particular cabin will no longer function
         gameManager.doorsRemaining--;
 
         foreach (GameObject light in lights)

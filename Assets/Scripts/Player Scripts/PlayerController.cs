@@ -22,6 +22,11 @@ public class PlayerController : MonoBehaviour
     public GameObject gunCam;
     [Space()]
 
+    [Header("Player SFX Settings")]
+    public AudioClip deathSFX;
+    public AudioClip pickupHealthSFX;
+    public AudioClip pickupAmmmoSFX;
+
     [Header("GameMode Settings")]
     //THE GAME MODE BOOLS MUST BE CHECKED IN THE UNITY EDITOR
     public bool isSurvival = false;
@@ -35,6 +40,7 @@ public class PlayerController : MonoBehaviour
     private TDMManager tdmManager;
     private CHAOSManager chaosManager;
     private Camera mainCam;
+    private AudioSource playerAudio;
     private Vector3 velocity;
     private GameObject AK;
     private GameObject Uzi;
@@ -56,6 +62,7 @@ public class PlayerController : MonoBehaviour
         }
 
         mainCam = Camera.main;
+        playerAudio = gameObject.GetComponent<AudioSource>();
         AK = GameObject.Find("Player/PlayerCharacter/Main Camera/WeaponSlot/AkRecoil/AK-47");
         Uzi = GameObject.Find("Player/PlayerCharacter/Main Camera/WeaponSlot/UziRecoil/Uzi");
         Colt = GameObject.Find("Player/PlayerCharacter/Main Camera/WeaponSlot/ColtM4Recoil/ColtM4");
@@ -138,6 +145,8 @@ public class PlayerController : MonoBehaviour
 
     void Death()
     {
+        playerAudio.PlayOneShot(deathSFX);
+
         isDead = true;
 
         if (isTDM)
@@ -187,7 +196,7 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    //ammo pickup logic
+    //pickup logic for relevant scripts to call on
 
     public void AkPickup()
     {
@@ -217,5 +226,15 @@ public class PlayerController : MonoBehaviour
     {
         GrenadeThrower grenade = Grenade.GetComponent<GrenadeThrower>();
         grenade.ammoPouch += grenade.maxAmmo;
+    }
+
+    public void AmmoPickupSFXTrigger()
+    {
+        playerAudio.PlayOneShot(pickupAmmmoSFX);
+    }
+
+    public void HealthPickupSFXTrigger()
+    {
+        playerAudio.PlayOneShot(pickupHealthSFX);
     }
 }

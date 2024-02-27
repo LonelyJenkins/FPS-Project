@@ -19,28 +19,27 @@ public class BossController : MonoBehaviour
     public float attackDistance = 1.0f;
     public float attackRange = 4.0f;
     public float hitForce = 1000.0f;
+    public AudioClip roarSFX;
+    public AudioClip deathSFX;
+    public AudioClip attackSFX;
 
     public LayerMask attackableLayers;
     public LayerMask damageableLayers;
 
     private NavMeshAgent agent;
     private Animator bossAnim;
+    private AudioSource bossAudio;
     private GameManager gameManager;
     private CHAOSManager chaosManager;
     private Identifier identifier;
     private bool hasAttacked = false;
 
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
     private void Awake()
     {
         agent = gameObject.GetComponent<NavMeshAgent>();
         bossAnim = gameObject.GetComponent<Animator>();
+        bossAudio = gameObject.GetComponent<AudioSource>();
         DoRagdoll(isDead, true);
         isAlerted = true;
 
@@ -143,6 +142,7 @@ public class BossController : MonoBehaviour
     void Death(bool playerAttack)
     {
         isDead = true;
+        bossAudio.PlayOneShot(deathSFX);
         DropItem();
         Collider collider = gameObject.GetComponent<Collider>();
         collider.enabled = false;
@@ -210,6 +210,11 @@ public class BossController : MonoBehaviour
         }
     }
 
+    public void AttackSFXTrigger()
+    {
+        bossAudio.PlayOneShot(attackSFX); //method created to be called from bossAttack script
+    }
+
     void DropItem()
     {
         int dropChance = Random.Range(1, 3);
@@ -217,9 +222,10 @@ public class BossController : MonoBehaviour
         {
             Instantiate(dropItem, new Vector3(transform.position.x, transform.position.y + 1.5f, transform.position.z), Quaternion.identity);
         }
+
         else
         {
-            Debug.Log("Better Luck Next Kill BITCH");
+            return;
         }
     }
 
@@ -229,7 +235,7 @@ public class BossController : MonoBehaviour
         hasAttacked = false;
     }
 
-    private void OnDrawGizmosSelected()
+    private void OnDrawGizmosSelected() //visual representation of the attack range (for unity editor)
     {
         Gizmos.DrawWireSphere(gameObject.transform.position, attackRange);
     }

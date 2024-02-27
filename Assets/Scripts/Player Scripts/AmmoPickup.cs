@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class AmmoPickup : MonoBehaviour
 {
-    public float speed = 200.0f;
+    public float speed = 200.0f; //pickup rotation speed
 
     [Header("Ammo Type")]
     public bool Uzi;
@@ -33,10 +33,12 @@ public class AmmoPickup : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && !health)
+        if (other.CompareTag("Player") && !health) //detecting the kind of ammo player is picking up
         {
             PlayerController player = other.GetComponent<PlayerController>();
-            GameObject ammoPickupObject = Instantiate(ammoPickupFX, transform.position, transform.rotation);
+            player.AmmoPickupSFXTrigger(); //playing ammo pickup sfx
+            GameObject ammoPickupObject = Instantiate(ammoPickupFX, transform.position, transform.rotation); //spawning particle vfx
+            
             Destroy(ammoPickupObject, 1);
 
             if (Uzi == true)
@@ -65,6 +67,7 @@ public class AmmoPickup : MonoBehaviour
         else if (other.CompareTag("Player") && health)
         {
             PlayerController player = other.GetComponent<PlayerController>();
+            player.HealthPickupSFXTrigger();
             GameObject healthPickupObject = Instantiate(healthPickupFX, transform.position, transform.rotation);
             Destroy(healthPickupObject, 1);
             player.currentHealth += healthPickupValue;

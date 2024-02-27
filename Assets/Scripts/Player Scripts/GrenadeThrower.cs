@@ -38,13 +38,13 @@ public class GrenadeThrower : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerController.isDead)
+        if (playerController.isDead) //stops rendering grenade if player is dead
         {
             gunCam.SetActive(false);
             return;
         }
 
-        weaponSwitching.isReloading = isReloading;
+        weaponSwitching.isReloading = isReloading; //will not continue logic if actively reloading grenade. Similar to gun logic
 
         if (isReloading)
         {
@@ -54,7 +54,7 @@ public class GrenadeThrower : MonoBehaviour
         playerHud.ammoPouch = ammoPouch;
         playerHud.ammo = currentAmmo;
 
-        if (currentAmmo <= 0 && ammoPouch > 0)
+        if (currentAmmo <= 0 && ammoPouch > 0) //imposes reload time between throwing grenades
         {
             StartCoroutine(Reload());
             return;
@@ -65,7 +65,7 @@ public class GrenadeThrower : MonoBehaviour
             ThrowGrenade();
         }
 
-        if ((currentAmmo <= 0) && (ammoPouch <= 0))
+        if ((currentAmmo <= 0) && (ammoPouch <= 0)) //grenade will not render in player's hand if player is out of throwable grenades
         {
             MeshRenderer[] mesh = gameObject.GetComponentsInChildren<MeshRenderer>();
             foreach (MeshRenderer meshs in mesh)
@@ -102,7 +102,7 @@ public class GrenadeThrower : MonoBehaviour
 
     IEnumerator ThrowTime()
     {
-        yield return new WaitForSeconds(animTime);
+        yield return new WaitForSeconds(animTime);//imposing timer to allow throwing animation to finish before launching grenade game object
 
         GameObject grenade = Instantiate(grenadePrefab, launchPoint.transform.position, Quaternion.identity);
         Rigidbody rb = grenade.GetComponent<Rigidbody>();

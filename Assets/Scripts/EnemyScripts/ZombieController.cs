@@ -11,6 +11,10 @@ public class ZombieController : MonoBehaviour
     public LayerMask damageableLayers;
     public int health = 100;
     public bool isDead = false;
+    public AudioClip biteSFX;
+    public AudioClip attackSFX;
+    public AudioClip[] groanSFX;
+    public AudioClip deathSFX;
     public GameObject rig; //the part of the gameObject that is parent to all of the parts of the gameObject. This is to activate ragdoll state on death
     public GameObject dropItem;
     public Transform attackPosition; //points on prefab that inflict damage on other attackable types (ex. hands)
@@ -23,11 +27,13 @@ public class ZombieController : MonoBehaviour
 
     private NavMeshAgent agent;
     private Animator zombieAnim;
+    private AudioSource zombieAudio;
     private PlayerController playerController;
     private Transform playerPosition;
     private GameManager gameManager;
     private CHAOSManager chaosManager;
     private Identifier identifier;
+    private float groanInterval;
     private bool hasBeenShot = false;
     private bool hasAttacked = false;
 
@@ -40,6 +46,7 @@ public class ZombieController : MonoBehaviour
     private void Awake()
     {
         GameObject manager = GameObject.FindGameObjectWithTag("GameManager");
+        zombieAudio = gameObject.GetComponent<AudioSource>();
         identifier = manager.GetComponentInChildren<Identifier>(); //checking for game mode type
 
 
@@ -66,6 +73,8 @@ public class ZombieController : MonoBehaviour
         DoRagdoll(isDead);
 
         RandomIdleAnim();
+
+        groanInterval = Time.time + Random.Range(20, 40); //this determines the intervals in which the zombie will emit a groan
     }
 
     // Update is called once per frame
@@ -88,6 +97,14 @@ public class ZombieController : MonoBehaviour
         {
             Attack();
         }
+
+        if (Time.time >= groanInterval) //timer for groan sfx
+        {
+            TriggerGroan();
+            groanInterval = Time.time + Random.Range(20, 40);
+        }
+
+        
     }
 
     private void OnTriggerEnter(Collider other)
@@ -103,6 +120,13 @@ public class ZombieController : MonoBehaviour
         int idleAnimation = Random.Range(1, 4);
         zombieAnim.speed = Random.Range(0.8f, 1.4f);
         zombieAnim.SetBool("isIdle" + idleAnimation, true);
+    }
+
+    void TriggerGroan()
+    {
+        int randomGroan = Random.Range(0, groanSFX.Length); //choosing random groan sfx to play
+        zombieAudio.pitch = Random.Range(0.8f, 1.1f); //adding variance to groan sfx
+        zombieAudio.PlayOneShot(groanSFX[randomGroan]);
     }
 
     public void TakeDamage(int amount, bool playerAttack) //takes value of incoming damage and checks if damage was from player.
@@ -150,6 +174,16 @@ public class ZombieController : MonoBehaviour
         int attackType = Random.Range(1, 3); //machine determines a random attack animation
         zombieAnim.SetTrigger("Attack" + attackType);
         hasAttacked = true;
+
+        if (attackType == 1) //determining the appropriate audio SFX for the specific attack type
+        {
+            zombieAudio.PlayOneShot(attackSFX);
+        }
+        else
+        {
+            zombieAudio.PlayOneShot(biteSFX);
+        }
+
         Collider[] target = Physics.OverlapSphere(attackPosition.position, attackDistance, damageableLayers); //checking for targets hit, if any
         foreach (Collider attackable in target)
         {
@@ -184,6 +218,8 @@ public class ZombieController : MonoBehaviour
 
     void Death(bool playerAttack) //death state. Checks if killing blow was made by player
     {
+        zombieAudio.PlayOneShot(deathSFX);
+
         isDead = true;
 
         if (isSurvival)

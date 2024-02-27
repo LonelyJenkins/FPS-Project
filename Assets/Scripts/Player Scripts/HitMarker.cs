@@ -24,7 +24,7 @@ public class HitMarker : MonoBehaviour
         }
     }
 
-    public void IndicateHit()
+    public void IndicateHit() //method used to enable hitmarker for specific amount of time
     {
 
         hitMarker.enabled = true;

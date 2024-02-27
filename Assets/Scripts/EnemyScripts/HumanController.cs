@@ -19,6 +19,10 @@ public class HumanController : MonoBehaviour
     public GameObject visionPoint;
     public GameObject rig;
     public GameObject dropItem;
+    public AudioClip gunShotSFX;
+    public AudioClip reloadSFX;
+    public AudioClip injurySFX;
+    public AudioClip deathSFX;
     public bool isAlerted;
     public bool isTDM = false;
     public bool isChaos = false;
@@ -39,6 +43,7 @@ public class HumanController : MonoBehaviour
 
     private NavMeshAgent agent;
     private Animator humanAnim;
+    private AudioSource humanAudio;
     private float nextFire = 0;
     private bool isWalking = false;
     [SerializeField] private bool enemyInSight = false;
@@ -50,19 +55,14 @@ public class HumanController : MonoBehaviour
     private CHAOSManager chaosManager;
     private Identifier identifier;
     private GameObject[] patrolPoints;
-    [SerializeField] private Vector3 destination;
+    private Vector3 destination;
 
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
 
     private void Awake()
     {
         agent = gameObject.GetComponent<NavMeshAgent>();
         humanAnim = gameObject.GetComponentInChildren<Animator>();
+        humanAudio = gameObject.GetComponent<AudioSource>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         DoRagdoll(isDead);
         currentAmmo = maxAmmo;
@@ -196,6 +196,8 @@ public class HumanController : MonoBehaviour
 
     void Shoot()
     {
+        humanAudio.pitch = Random.Range(0.9f, 1.1f); //add varaince in gunshot sfx
+        humanAudio.PlayOneShot(gunShotSFX);
         muzzleFlash.Play();
         StartCoroutine(muzzleLighting());
         currentAmmo--;
@@ -257,6 +259,7 @@ public class HumanController : MonoBehaviour
     IEnumerator Reload()
     {
             Debug.Log("RELOADING HERE");
+            humanAudio.PlayOneShot(reloadSFX);
             yield return new WaitForSeconds(reloadTime);
             Debug.Log("OKAY IM RELOADED");
             isReloading = false;
@@ -273,7 +276,7 @@ public class HumanController : MonoBehaviour
     public void TakeDamage(int amount, bool playerAttack)
     {
         isAlerted = true;
-
+        humanAudio.PlayOneShot(injurySFX);
         health -= amount;
         if (health <= 0)
         {
@@ -292,6 +295,7 @@ public class HumanController : MonoBehaviour
         humanAnim.enabled = false;
         agent.enabled = false;
         Destroy(gameObject, despawnTime);
+        humanAudio.PlayOneShot(deathSFX);
         DoRagdoll(isDead);
 
         if (isTDM == true)

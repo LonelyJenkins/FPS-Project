@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Audio;
 
 public class SurvivorController : MonoBehaviour
 {
@@ -19,6 +20,10 @@ public class SurvivorController : MonoBehaviour
     public GameObject visionPoint;
     public GameObject rig;
     public GameObject dropItem;
+    public AudioClip gunShotSFX;
+    public AudioClip reloadSFX;
+    public AudioClip injurySFX;
+    public AudioClip deathSFX;
     public bool isTDM = false;
     public bool isSurvival = false;
     public bool isChaos = false;
@@ -39,6 +44,7 @@ public class SurvivorController : MonoBehaviour
 
     private NavMeshAgent agent;
     private Animator humanAnim;
+    private AudioSource humanAudio;
     private float nextFire = 0;
     private bool isAlerted;
     private bool isWalking = false;
@@ -56,15 +62,11 @@ public class SurvivorController : MonoBehaviour
     private Vector3 destination;
 
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
 
     private void Awake()
     {
         agent = gameObject.GetComponent<NavMeshAgent>();
+        humanAudio = gameObject.GetComponent<AudioSource>();
         humanAnim = gameObject.GetComponentInChildren<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
         DoRagdoll(isDead);
@@ -75,6 +77,8 @@ public class SurvivorController : MonoBehaviour
 
         GameObject manager = GameObject.FindGameObjectWithTag("GameManager");
         identifier = manager.GetComponentInChildren<Identifier>();
+
+        //below is to determine game mode and apply relevant settings
 
         if (identifier.isChaos == true)
         {
@@ -135,6 +139,8 @@ public class SurvivorController : MonoBehaviour
 
             if (Physics.Raycast(visionPoint.transform.position, transform.forward, out hit, visionRange, ~ignoreLayers))
             {
+                //determines if there is an enemy within 'sight', which will trigger shoot method
+
                 HumanController human = hit.transform.GetComponent<HumanController>();
                 ZombieController zombie = hit.transform.GetComponent<ZombieController>();
                 BossController boss = hit.transform.GetComponent<BossController>();
@@ -159,6 +165,8 @@ public class SurvivorController : MonoBehaviour
 
     void FindClosestTarget()
     {
+        //logic to determine target position based on distance of nearest target.
+
         float distanceToNearestTarget = Mathf.Infinity;
         Collider closestTarget = null;
 
@@ -216,12 +224,14 @@ public class SurvivorController : MonoBehaviour
 
     void Shoot()
     {
+        humanAudio.pitch = Random.Range(0.9f, 1.1f); //add varaince in gunshot sfx
+        humanAudio.PlayOneShot(gunShotSFX);
         muzzleFlash.Play();
         StartCoroutine(muzzleLighting());
         currentAmmo--;
         StartCoroutine(ShootAnim());
 
-        Vector3 shootDirection = visionPoint.transform.forward;
+        Vector3 shootDirection = visionPoint.transform.forward; //giving shoot direction. Offset applied to add variance
             shootDirection.x += Random.Range(-accuracyOffset, accuracyOffset);
             shootDirection.y += Random.Range(-accuracyOffset, accuracyOffset);
             shootDirection.z += Random.Range(0, accuracyOffset);
@@ -269,6 +279,7 @@ public class SurvivorController : MonoBehaviour
     IEnumerator Reload()
     {
             Debug.Log("RELOADING HERE");
+            humanAudio.PlayOneShot(reloadSFX);
             yield return new WaitForSeconds(reloadTime);
             Debug.Log("OKAY IM RELOADED");
             isReloading = false;
@@ -285,7 +296,7 @@ public class SurvivorController : MonoBehaviour
     public void TakeDamage(int amount)
     {
         isAlerted = true;
-
+        humanAudio.PlayOneShot(injurySFX);
         health -= amount;
         if (health <= 0)
         {
@@ -302,6 +313,7 @@ public class SurvivorController : MonoBehaviour
         humanAnim.enabled = false;
         agent.enabled = false;
         Destroy(gameObject, despawnTime);
+        humanAudio.PlayOneShot(deathSFX);
         DoRagdoll(isDead);
 
         if (isSurvival)
@@ -322,13 +334,13 @@ public class SurvivorController : MonoBehaviour
 
     void DoRagdoll(bool deathState)
     {
-        Collider[] colliders = rig.GetComponentsInChildren<Collider>();
+        Collider[] colliders = rig.GetComponentsInChildren<Collider>(); //deactivating all colliders in gameobject
         foreach (Collider col in colliders)
         {
             col.enabled = deathState;
         }
 
-        Rigidbody[] rigidbodies = rig.GetComponentsInChildren<Rigidbody>();
+        Rigidbody[] rigidbodies = rig.GetComponentsInChildren<Rigidbody>(); //enabling all rigidbodies in model for ragdoll
         foreach (Rigidbody rb in rigidbodies)
         {
             rb.isKinematic = !deathState;

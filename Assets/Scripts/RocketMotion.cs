@@ -30,13 +30,13 @@ public class RocketMotion : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        DetachSmoke();
+        DetachSmoke(); //removing smoke particles from parent object
         Impact();
     }
 
     void Impact()
     {
-        Instantiate(explosionFx, transform.position, transform.rotation);
+        Instantiate(explosionFx, transform.position, transform.rotation); //damaging all applicable colliders
 
        Collider[] collidersToDamage = Physics.OverlapSphere(transform.position, damageRadius);
 
@@ -64,7 +64,7 @@ public class RocketMotion : MonoBehaviour
 
         Collider[] collidersToMove = Physics.OverlapSphere(transform.position, damageRadius);
 
-        foreach (Collider nearbyObject in collidersToMove)
+        foreach (Collider nearbyObject in collidersToMove) //adding explosive force to all physics objects within the damage radius
         {
             Rigidbody rb = nearbyObject.GetComponent<Rigidbody>();
             if (rb != null)

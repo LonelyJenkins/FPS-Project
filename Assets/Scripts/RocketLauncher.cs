@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class RocketLauncher : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class RocketLauncher : MonoBehaviour
     public GameObject gunCam;
     public Animator recoilAnim;
     public GameObject scopeOverlay;
+    public AudioClip gunshotSFX;
+    public AudioClip reloadSFX;
 
     private int currentAmmo;
     private bool isReloading = false;
@@ -28,6 +31,7 @@ public class RocketLauncher : MonoBehaviour
     private MouseLook mouseLook;
     private WeaponSwitching weaponSwitching;
     private PlayerController playerController;
+    private AudioSource gunAudio;
 
     private void Start()
     {
@@ -35,6 +39,7 @@ public class RocketLauncher : MonoBehaviour
         playerHud = GameObject.FindGameObjectWithTag("hud").GetComponent<PlayerHud>();
         playerController = gameObject.GetComponentInParent<PlayerController>();
         gunAnim = gameObject.GetComponent<Animator>();
+        gunAudio = gameObject.GetComponent<AudioSource>();
         mouseLook = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<MouseLook>();
         normalFOV = fpsCam.fieldOfView;
     }
@@ -100,17 +105,15 @@ public class RocketLauncher : MonoBehaviour
     void Shoot()
     {
         muzzleFlash.Play();
-
-
         Instantiate(rocket, muzzle.transform.position, muzzle.transform.rotation);
-
+        gunAudio.PlayOneShot(gunshotSFX);
         currentAmmo--;
     }
 
     IEnumerator Reload()
     {
         isReloading = true;
-
+        gunAudio.PlayOneShot(reloadSFX);
         yield return new WaitForSeconds(reloadTime);
 
         currentAmmo++;
